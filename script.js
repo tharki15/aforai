@@ -25,7 +25,7 @@ let questionTimers = Array(totalQuestions).fill(null); // Timers for each questi
 
 // Main timer variables
 let mainTimerInterval;
-let mainTimerTime = 10799; // 2 hours, 59 minutes, 59 seconds in seconds
+let mainTimerTime = 4499; // 2 hours, 59 minutes, 59 seconds in seconds
 
 // Load question image
 function loadQuestion() {
