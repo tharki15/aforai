@@ -1,5 +1,5 @@
 let currentQuestionIndex = 0;
-const totalQuestions = 75;
+const totalQuestions = 35;
 const imageExtensions = ['jpg', 'jpeg', 'png'];
 
 const questionImageElement = document.getElementById('question-image');
@@ -25,7 +25,7 @@ let questionTimers = Array(totalQuestions).fill(null); // Timers for each questi
 
 // Main timer variables
 let mainTimerInterval;
-let mainTimerTime = 10799; // 2 hours, 59 minutes, 59 seconds in seconds
+let mainTimerTime = 2700; // 2 hours, 59 minutes, 59 seconds in seconds
 
 // Load question image
 function loadQuestion() {
