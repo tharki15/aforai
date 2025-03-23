@@ -1,0 +1,194 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header-top {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.tagline {
+    font-size: 18px;
+    color: #555;
+}
+
+.header-bottom {
+    margin-top: 10px;
+}
+
+.exam-name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.subjects {
+    font-size: 18px;
+    color: #555;
+}
+
+.download-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.download-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.download-btn:hover {
+    background-color: #0056b3;
+}
+
+.candidate-info {
+    margin: 20px 0;
+    font-size: 18px;
+}
+
+.highlight {
+    font-weight: bold;
+}
+
+.language-section {
+    margin: 20px 0;
+}
+
+.language-section label {
+    font-size: 18px;
+}
+
+.language-section select {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.question-section {
+    margin: 20px 0;
+}
+
+.question-number {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.question-image img {
+    max-width: 100%;
+    height: auto;
+    margin: 10px 0;
+}
+
+.options {
+    margin: 10px 0;
+}
+
+.options label {
+    display: block;
+    margin: 5px 0;
+}
+
+.navigation-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background-color: #0056b3;
+}
+
+.footer-navigation {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.footer-nav-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.footer-nav-btn:hover {
+    background-color: #0056b3;
+}
+
+.status-section {
+    margin: 20px 0;
+    font-size: 18px;
+}
+
+.status-item {
+    margin: 5px 0;
+}
+
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.grid-item {
+    padding: 10px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.grid-item:hover {
+    background-color: #ddd;
+}
+
+.submit-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+#pieChart {
+    max-width: 400px;
+    margin: 20px auto;
+    
+}
