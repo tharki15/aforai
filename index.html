@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Emoji Soundboard</title>
+    <style>
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .emoji-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .emoji {
+            font-size: 2.5rem;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px;
+        }
+        .emoji:active, .emoji:hover {
+            animation: dance 0.5s infinite alternate;
+            transform: scale(1.3);
+        }
+        @keyframes dance {
+            0% { transform: rotate(-10deg) scale(1.3); }
+            100% { transform: rotate(10deg) scale(1.3); }
+        }
+        .volume-control {
+            margin-top: 20px;
+            display: none; /* Hide volume control on mobile */
+        }
+        #fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hey cutie !!! Tap emojis to enjoy sounds!</h1>
+
+    <div class="emoji-container">
+        <span class="emoji" data-sound="sound1.mp3">😀</span>
+        <span class="emoji" data-sound="sound2.mp3">😂</span>
+        <span class="emoji" data-sound="sound3.mp3">😍</span>
+        <span class="emoji" data-sound="sound4.mp3">😎</span>
+        <span class="emoji" data-sound="sound5.mp3">😭</span>
+        <span class="emoji" data-sound="sound6.mp3">😡</span>
+        <span class="emoji" data-sound="sound7.mp3">🤔</span>
+        <span class="emoji" data-sound="sound8.mp3">😴</span>
+        <span class="emoji" data-sound="sound9.mp3">🥳</span>
+        <span class="emoji" data-sound="sound10.mp3">🤯</span>
+        <span class="emoji" data-sound="sound11.mp3">🤗</span>
+        <span class="emoji" data-sound="sound12.mp3">🤩</span>
+        <span class="emoji" data-sound="sound13.mp3">🥺</span>
+        <span class="emoji" data-sound="sound14.mp3">💀</span>
+    </div>
+
+    <button id="fullscreen-btn">Fullscreen</button>
+
+    <script>
+        // Prevent leaving the website
+        function preventExit(e) {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        }
+        
+        window.addEventListener('beforeunload', preventExit);
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                alert("Please don't leave! The fun is here!");
+                document.title = "COME BACK! 😢";
+            }
+        });
+        
+        // Disable hardware volume buttons
+        document.addEventListener('volumeup', function(e) { e.preventDefault(); }, false);
+        document.addEventListener('volumedown', function(e) { e.preventDefault(); }, false);
+        
+        // Lock orientation (works on some devices)
+        function lockOrientation() {
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('portrait').catch(e => console.log(e));
+            }
+        }
+        
+        // Fullscreen mode
+        document.getElementById('fullscreen-btn').addEventListener('click', function() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            }
+            lockOrientation();
+        });
+        
+        // Audio management
+        const emojiAudioData = new Map();
+        
+        document.querySelectorAll('.emoji').forEach(emoji => {
+            const soundFile = emoji.getAttribute('data-sound');
+            
+            if (!emojiAudioData.has(soundFile)) {
+                emojiAudioData.set(soundFile, {
+                    audio: new Audio(soundFile),
+                    playbackPosition: 0
+                });
+                emojiAudioData.get(soundFile).audio.volume = 1;
+            }
+            
+            // Touch events for mobile
+            emoji.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                const audioData = emojiAudioData.get(soundFile);
+                audioData.audio.currentTime = audioData.playbackPosition;
+                audioData.audio.play();
+                this.style.animation = 'dance 0.5s infinite alternate';
+            });
+            
+            emoji.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                const audioData = emojiAudioData.get(soundFile);
+                audioData.playbackPosition = audioData.audio.currentTime;
+                audioData.audio.pause();
+                this.style.animation = '';
+            });
+        });
+        
+        // Prevent context menu on long press
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        
+        // Initial orientation lock
+        lockOrientation();
+    </script>
+</body>
+</html>
