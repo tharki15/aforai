@@ -2,20 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emoji Soundboard</title>
     <style>
-        * {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
-        }
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -23,60 +12,44 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
             background-color: #f4f4f4;
-            overflow: hidden;
         }
         h1 {
             text-align: center;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
         }
         .emoji-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            width: 100%;
+            gap: 20px;
             max-width: 600px;
+            margin-top: 20px;
         }
         .emoji {
-            font-size: 2.5rem;
+            font-size: 50px;
             cursor: pointer;
+            transition: transform 0.2s ease-in-out;
             display: inline-block;
-            padding: 10px;
         }
-        .emoji:active, .emoji:hover {
+        .emoji:hover {
             animation: dance 0.5s infinite alternate;
             transform: scale(1.3);
+        }
+        .volume-control {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         @keyframes dance {
             0% { transform: rotate(-10deg) scale(1.3); }
             100% { transform: rotate(10deg) scale(1.3); }
         }
-        .volume-control {
-            margin-top: 20px;
-            display: none; /* Hide volume control on mobile */
-        }
-        #fullscreen-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 15px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            z-index: 100;
-        }
     </style>
 </head>
 <body>
 
-    <h1>Hey cutie !!! Tap emojis to enjoy sounds!</h1>
+    <h1>Hey cutie !!! are you on mood swings, tap on emoji and enjoy sound</h1>
 
     <div class="emoji-container">
         <span class="emoji" data-sound="sound1.mp3">😀</span>
@@ -95,84 +68,100 @@
         <span class="emoji" data-sound="sound14.mp3">💀</span>
     </div>
 
-    <button id="fullscreen-btn">Fullscreen</button>
+    <div class="volume-control">
+        <label for="volume">Volume:</label>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+    </div>
 
     <script>
-        // Prevent leaving the website
-        function preventExit(e) {
+        // Beforeunload event to confirm leaving the site
+        window.addEventListener('beforeunload', function (e) {
             e.preventDefault();
-            e.returnValue = '';
-            return '';
-        }
-        
-        window.addEventListener('beforeunload', preventExit);
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                alert("Please don't leave! The fun is here!");
-                document.title = "COME BACK! 😢";
-            }
+            e.returnValue = 'Are you sure you want to leave? The fun will stop!';
+            return e.returnValue;
         });
-        
-        // Disable hardware volume buttons
-        document.addEventListener('volumeup', function(e) { e.preventDefault(); }, false);
-        document.addEventListener('volumedown', function(e) { e.preventDefault(); }, false);
-        
-        // Lock orientation (works on some devices)
-        function lockOrientation() {
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('portrait').catch(e => console.log(e));
-            }
-        }
-        
-        // Fullscreen mode
-        document.getElementById('fullscreen-btn').addEventListener('click', function() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            }
-            lockOrientation();
-        });
-        
-        // Audio management
+
+        // Store audio elements and their playback positions
         const emojiAudioData = new Map();
-        
+
+        // Volume control with confirmation
+        const volumeControl = document.getElementById('volume');
+        volumeControl.addEventListener('input', function() {
+            if (this.value < 1) {
+                const confirmLower = confirm('Are you sure you want to lower the volume? Maximum volume is more fun!');
+                if (confirmLower) {
+                    // Update volume for all existing audio elements
+                    emojiAudioData.forEach(data => {
+                        if (data.audio) {
+                            data.audio.volume = this.value;
+                        }
+                    });
+                } else {
+                    this.value = 1;
+                    // Reset volume to max for all existing audio elements
+                    emojiAudioData.forEach(data => {
+                        if (data.audio) {
+                            data.audio.volume = 1;
+                        }
+                    });
+                }
+            } else {
+                // Update volume to max for all existing audio elements
+                emojiAudioData.forEach(data => {
+                    if (data.audio) {
+                        data.audio.volume = this.value;
+                    }
+                });
+            }
+        });
+
         document.querySelectorAll('.emoji').forEach(emoji => {
             const soundFile = emoji.getAttribute('data-sound');
             
+            // Initialize audio data for this emoji
             if (!emojiAudioData.has(soundFile)) {
                 emojiAudioData.set(soundFile, {
-                    audio: new Audio(soundFile),
+                    audio: null,
                     playbackPosition: 0
                 });
-                emojiAudioData.get(soundFile).audio.volume = 1;
             }
             
-            // Touch events for mobile
-            emoji.addEventListener('touchstart', function(e) {
-                e.preventDefault();
+            emoji.addEventListener('mouseenter', () => {
                 const audioData = emojiAudioData.get(soundFile);
+                
+                // Create audio element if it doesn't exist
+                if (!audioData.audio) {
+                    audioData.audio = new Audio(soundFile);
+                    audioData.audio.volume = volumeControl.value;
+                }
+                
+                // Set the playback position
                 audioData.audio.currentTime = audioData.playbackPosition;
+                
+                // Play the audio
                 audioData.audio.play();
-                this.style.animation = 'dance 0.5s infinite alternate';
+                
+                // Add dancing animation
+                emoji.style.animation = 'dance 0.5s infinite alternate';
             });
-            
-            emoji.addEventListener('touchend', function(e) {
-                e.preventDefault();
+
+            emoji.addEventListener('mouseleave', () => {
                 const audioData = emojiAudioData.get(soundFile);
-                audioData.playbackPosition = audioData.audio.currentTime;
-                audioData.audio.pause();
-                this.style.animation = '';
+                
+                if (audioData.audio) {
+                    // Store current playback position
+                    audioData.playbackPosition = audioData.audio.currentTime;
+                    
+                    // Pause the audio (but don't reset)
+                    audioData.audio.pause();
+                }
+                
+                // Remove dancing animation
+                emoji.style.animation = '';
             });
         });
-        
-        // Prevent context menu on long press
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-        
-        // Initial orientation lock
-        lockOrientation();
+
     </script>
+
 </body>
 </html>
