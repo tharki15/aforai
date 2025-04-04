@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emoji Feelings</title>
+    <title>Emoji Soundboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,11 +11,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f4f4f4;
+            padding: 20px;
+            box-sizing: border-box;
         }
         h1 {
             text-align: center;
+            margin-bottom: 20px;
         }
         .emoji-container {
             display: flex;
@@ -30,16 +33,37 @@
             cursor: pointer;
             transition: transform 0.2s ease-in-out;
             display: inline-block;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
-        .emoji:hover {
+        .emoji:hover, .emoji.active {
             animation: dance 0.5s infinite alternate;
             transform: scale(1.3);
         }
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
         .volume-control {
-            margin-top: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ff5252;
         }
         @keyframes dance {
             0% { transform: rotate(-10deg) scale(1.3); }
@@ -68,9 +92,12 @@
         <span class="emoji" data-sound="sound14.mp3">💀</span>
     </div>
 
-    <div class="volume-control">
-        <label for="volume">Volume:</label>
-        <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+    <div class="controls">
+        <div class="volume-control">
+            <label for="volume">Volume:</label>
+            <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+        </div>
+        <button id="stopButton">Stop All Sounds</button>
     </div>
 
     <script>
@@ -83,6 +110,17 @@
 
         // Store audio elements and their playback positions
         const emojiAudioData = new Map();
+        let audioContextInitialized = false;
+        let audioContext;
+        let currentlyPlaying = null;
+        
+        // iOS requires audio context to be created/resumed after user interaction
+        function initAudioContext() {
+            if (!audioContextInitialized) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                audioContextInitialized = true;
+            }
+        }
 
         // Volume control with confirmation
         const volumeControl = document.getElementById('volume');
@@ -115,6 +153,23 @@
             }
         });
 
+        // Stop all sounds
+        document.getElementById('stopButton').addEventListener('click', () => {
+            emojiAudioData.forEach(data => {
+                if (data.audio) {
+                    data.audio.pause();
+                    data.audio.currentTime = 0;
+                }
+            });
+            
+            // Remove active class from all emojis
+            document.querySelectorAll('.emoji').forEach(emoji => {
+                emoji.classList.remove('active');
+            });
+            
+            currentlyPlaying = null;
+        });
+
         document.querySelectorAll('.emoji').forEach(emoji => {
             const soundFile = emoji.getAttribute('data-sound');
             
@@ -122,45 +177,102 @@
             if (!emojiAudioData.has(soundFile)) {
                 emojiAudioData.set(soundFile, {
                     audio: null,
-                    playbackPosition: 0
+                    element: emoji
                 });
             }
             
-            emoji.addEventListener('mouseenter', () => {
+            // Touch/click event for all devices
+            emoji.addEventListener('click', (e) => {
+                e.preventDefault();
+                initAudioContext();
+                
                 const audioData = emojiAudioData.get(soundFile);
+                
+                // If this sound is already playing, stop it
+                if (currentlyPlaying === soundFile) {
+                    audioData.audio.pause();
+                    audioData.audio.currentTime = 0;
+                    emoji.classList.remove('active');
+                    currentlyPlaying = null;
+                    return;
+                }
+                
+                // Stop any currently playing sound
+                if (currentlyPlaying) {
+                    const prevAudioData = emojiAudioData.get(currentlyPlaying);
+                    if (prevAudioData.audio) {
+                        prevAudioData.audio.pause();
+                        prevAudioData.audio.currentTime = 0;
+                    }
+                    prevAudioData.element.classList.remove('active');
+                }
                 
                 // Create audio element if it doesn't exist
                 if (!audioData.audio) {
                     audioData.audio = new Audio(soundFile);
                     audioData.audio.volume = volumeControl.value;
+                    audioData.audio.loop = true; // Make it loop continuously
+                    audioData.audio.setAttribute('preload', 'auto');
+                    audioData.audio.load();
                 }
-                
-                // Set the playback position
-                audioData.audio.currentTime = audioData.playbackPosition;
                 
                 // Play the audio
-                audioData.audio.play();
+                audioData.audio.currentTime = 0;
+                audioData.audio.play().catch(e => {
+                    console.error("Audio playback failed:", e);
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume().then(() => {
+                            audioData.audio.play();
+                        });
+                    }
+                });
                 
-                // Add dancing animation
-                emoji.style.animation = 'dance 0.5s infinite alternate';
+                // Update UI
+                emoji.classList.add('active');
+                currentlyPlaying = soundFile;
+                
+                // Handle when audio ends (shouldn't happen with loop=true, but just in case)
+                audioData.audio.addEventListener('ended', () => {
+                    emoji.classList.remove('active');
+                    currentlyPlaying = null;
+                }, {once: true});
             });
 
-            emoji.addEventListener('mouseleave', () => {
-                const audioData = emojiAudioData.get(soundFile);
-                
-                if (audioData.audio) {
-                    // Store current playback position
-                    audioData.playbackPosition = audioData.audio.currentTime;
-                    
-                    // Pause the audio (but don't reset)
-                    audioData.audio.pause();
-                }
-                
-                // Remove dancing animation
-                emoji.style.animation = '';
-            });
+            // For hover effects on non-touch devices
+            if (!('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+                emoji.addEventListener('mouseenter', () => {
+                    if (!currentlyPlaying) {
+                        initAudioContext();
+                        const audioData = emojiAudioData.get(soundFile);
+                        
+                        if (!audioData.audio) {
+                            audioData.audio = new Audio(soundFile);
+                            audioData.audio.volume = volumeControl.value;
+                        }
+                        
+                        audioData.audio.currentTime = 0;
+                        audioData.audio.play().catch(e => {
+                            console.error("Audio playback failed:", e);
+                        });
+                    }
+                });
+
+                emoji.addEventListener('mouseleave', () => {
+                    if (!currentlyPlaying) {
+                        const audioData = emojiAudioData.get(soundFile);
+                        
+                        if (audioData.audio) {
+                            audioData.audio.pause();
+                            audioData.audio.currentTime = 0;
+                        }
+                    }
+                });
+            }
         });
 
+        // Initialize audio context on any user interaction with the document
+        document.addEventListener('click', initAudioContext, { once: true });
+        document.addEventListener('touchstart', initAudioContext, { once: true });
     </script>
 
 </body>
