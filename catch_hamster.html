@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catch the Hamster</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Nunito");
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    html {
+      box-sizing: border-box;
+      font-size: 10px;
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+      font-family: "Nunito", sans-serif;
+      background: #fff9e2;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 4.5rem;
+      margin: 2rem 0 0 0;
+      color: #ff7660;
+    }
+
+    h2 {
+      font-size: 3rem;
+      color: #3b1010;
+      margin: 2rem;
+    }
+
+    .score {
+      background: #ffe5cf;
+      padding: 0 3rem;
+      border-radius: 1rem;
+      color: #3b1010;
+    }
+
+    .game {
+      width: 600px;
+      height: 400px;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 auto;
+    }
+
+    .hole {
+      flex: 1 0 33.33%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hole:after {
+      display: block;
+      background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1159990/dirt.svg") bottom center no-repeat;
+      background-size: contain;
+      content: "";
+      width: 100%;
+      height: 70px;
+      position: absolute;
+      z-index: 2;
+      bottom: -30px;
+    }
+
+    .mole {
+      background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1159990/mole.svg") bottom center no-repeat;
+      background-size: 60%;
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      height: 100%;
+      transition: all 0.4s;
+    }
+
+    .hole.up .mole {
+      top: 0;
+    }
+
+    #start {
+      font-family: "Nunito", sans-serif;
+      text-decoration: none;
+      border: 0;
+      background: #3b1010;
+      color: #fff;
+      font-size: 2rem;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      margin: 1rem;
+    }
+
+    #start:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h1>Catch the Hamster!</h1>
+  <h2 class="score">0</h2>
+  <div class="game">
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+  </div>
+  <button id="start" onclick="startGame()">Start!</button>
+
+  <audio id="endSound" src="sound1.mp3" preload="auto"></audio>
+
+  <script>
+    const holes = document.querySelectorAll(".hole");
+    const scoreBoard = document.querySelector(".score");
+    const moles = document.querySelectorAll(".mole");
+    const button = document.querySelector("#start");
+    const endSound = document.getElementById("endSound");
+
+    let lastHole;
+    let timeUp = false;
+    let score = 0;
+
+    function randomTime(min, max) {
+      return Math.round(Math.random() * (max - min) + min);
+    }
+
+    function randomHole(holes) {
+      const idx = Math.floor(Math.random() * holes.length);
+      const hole = holes[idx];
+
+      if (hole === lastHole) return randomHole(holes);
+
+      lastHole = hole;
+      return hole;
+    }
+
+    function peep() {
+      const time = randomTime(200, 1000);
+      const hole = randomHole(holes);
+      hole.classList.add("up");
+      setTimeout(() => {
+        hole.classList.remove("up");
+        if (!timeUp) peep();
+      }, time);
+    }
+
+    function startGame() {
+      scoreBoard.textContent = 0;
+      timeUp = false;
+      score = 0;
+      button.style.visibility = "hidden";
+      endSound.pause();
+      endSound.currentTime = 0;
+      peep();
+      setTimeout(() => {
+        timeUp = true;
+        button.innerHTML = "Try again?";
+        button.style.visibility = "visible";
+        endSound.play();
+      }, 10000);
+    }
+
+    function bonk(e) {
+      if (!e.isTrusted) return;
+      score++;
+      this.classList.remove("up");
+      scoreBoard.textContent = score;
+    }
+
+    moles.forEach((mole) => mole.addEventListener("click", bonk));
+  </script>
+</body>
+</html>
