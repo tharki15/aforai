@@ -14,7 +14,7 @@ body {
     min-height: 1000px;
     overflow: hidden;
     background: rgb(0, 0, 0);
-    background-image: url("background.jpg");
+    background-image: url("../images1/background.jpg");
     background-size: cover;
     background-position: center bottom;
 }
@@ -25,7 +25,7 @@ body {
     right: -200px;
     width: 200px;
     height: 312px;
-    background: url("zombie.png");
+    background: url("../images1/zombie.png");
     transform: scale(0.7);
     animation: walk 1s 0s infinite steps(9), walkFrom 14s 0s 1 linear;
     cursor: all-scroll;
@@ -47,7 +47,7 @@ body {
     position: absolute;
     bottom: 160px;
     left: -20px;
-    background: url("house.png");
+    background: url("../images1/house.png");
     background-position: center;
     transform: scale(1.75);
     height: 500px;
@@ -57,7 +57,7 @@ body {
 
 .home2 {
     position: absolute;
-    background: url("../images/house.png");
+    background: url("../images1/house.png");
     background-position: left;
     transform: scale(1.75);
     height: 500px;
