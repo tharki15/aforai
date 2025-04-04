@@ -1,264 +1,271 @@
-let currentQuestionIndex = 0;
-const totalQuestions = 25;
-const imageExtensions = ['jpg', 'jpeg', 'png'];
+// Sound initialization
+const sounds = [];
+let currentSound = null; // Track currently playing sound
 
-const questionImageElement = document.getElementById('question-image');
-const currentQuestionElement = document.getElementById('current-question');
-const timerElement = document.getElementById('timer');
-const questionGrid = document.getElementById('question-grid');
-const notVisitedElement = document.getElementById('not-visited');
-const notAnsweredElement = document.getElementById('not-answered');
-const answeredElement = document.getElementById('answered');
-const markedReviewElement = document.getElementById('marked-review');
-
-// Add canvas element for pie chart (add this to your HTML as well)
-const pieChartCanvas = document.createElement('canvas');
-pieChartCanvas.id = 'pieChart';
-document.body.appendChild(pieChartCanvas);
-
-// Track question status
-const questionStatus = Array(totalQuestions).fill('not-visited'); // 'not-visited', 'not-answered', 'answered', 'marked-review'
-let notVisitedCount = totalQuestions;
-let notAnsweredCount = totalQuestions;
-let answeredCount = 0;
-let markedReviewCount = 0;
-
-// Track time spent on each question
-const timeSpent = Array(totalQuestions).fill(0); // Time in seconds
-const visitCount = Array(totalQuestions).fill(0); // Number of visits
-let questionTimers = Array(totalQuestions).fill(null); // Timers for each question
-
-// Main timer variables
-let mainTimerInterval;
-let mainTimerTime = 4799; // 2 hours, 59 minutes, 59 seconds in seconds
-
-// Load question image
-function loadQuestion() {
-    const questionNumber = currentQuestionIndex + 1;
-    let imageFound = false;
-
-    for (let ext of imageExtensions) {
-        const testSrc = `images/question${questionNumber}.${ext}`;
-        const img = new Image();
-        img.src = testSrc;
-        img.onload = () => {
-            if (!imageFound) {
-                imageFound = true;
-                questionImageElement.src = testSrc;
-                currentQuestionElement.textContent = questionNumber;
-            }
-        };
-    }
-
-    if (questionStatus[currentQuestionIndex] === 'not-visited') {
-        questionStatus[currentQuestionIndex] = 'not-answered';
-        notVisitedCount--;
-        notVisitedElement.textContent = notVisitedCount;
-    }
-
-    startQuestionTimer(currentQuestionIndex);
-    visitCount[currentQuestionIndex]++;
-    updateGridColors();
+for (let i = 1; i <= 14; i++) {
+    const sound = new Audio(`sound${i}.mp3`);
+    sound.preload = 'auto';
+    sounds.push(sound);
 }
 
-// Start timer for a question
-function startQuestionTimer(questionIndex) {
-    if (questionTimers[questionIndex] === null) {
-        questionTimers[questionIndex] = setInterval(() => {
-            timeSpent[questionIndex]++;
-        }, 1000);
+function playRandomSound() {
+    // Stop any currently playing sound
+    if (currentSound) {
+        currentSound.pause();
+        currentSound.currentTime = 0;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * sounds.length);
+    currentSound = sounds[randomIndex];
+    currentSound.currentTime = 0;
+    currentSound.play().catch(e => console.log("Sound playback error:", e));
+}
+
+function stopCurrentSound() {
+    if (currentSound) {
+        currentSound.pause();
+        currentSound.currentTime = 0;
     }
 }
 
-// Pause timer for a question
-function pauseQuestionTimer(questionIndex) {
-    if (questionTimers[questionIndex] !== null) {
-        clearInterval(questionTimers[questionIndex]);
-        questionTimers[questionIndex] = null;
-    }
+// Game variables and setup
+var svg = document.querySelector("svg");
+var cursor = svg.createSVGPoint();
+var arrows = document.querySelector(".arrows");
+var randomAngle = 0;
+
+// Target positions
+var target = {
+    x: 900,
+    y: 249.5
+};
+
+// Target intersection line segment
+var lineSegment = {
+    x1: 875,
+    y1: 280,
+    x2: 925,
+    y2: 220
+};
+
+// Bow rotation point
+var pivot = {
+    x: 100,
+    y: 250
+};
+
+// Initialize aiming
+aim({
+    clientX: 320,
+    clientY: 300
+});
+
+// Event listeners
+window.addEventListener("mousedown", draw);
+
+function draw(e) {
+    // Stop any currently playing sound when starting new attempt
+    stopCurrentSound();
+    
+    // Pull back arrow
+    randomAngle = (Math.random() * Math.PI * 0.03) - 0.015;
+    TweenMax.to(".arrow-angle use", 0.3, {
+        opacity: 1
+    });
+    window.addEventListener("mousemove", aim);
+    window.addEventListener("mouseup", loose);
+    aim(e);
 }
 
-// Update grid colors based on question status
-function updateGridColors() {
-    const gridItems = document.querySelectorAll('.grid-item');
-    gridItems.forEach((item, index) => {
-        switch (questionStatus[index]) {
-            case 'answered':
-                item.style.backgroundColor = 'green';
-                break;
-            case 'marked-review':
-                item.style.backgroundColor = 'blue';
-                break;
-            case 'not-answered':
-                item.style.backgroundColor = 'red';
-                break;
-            default:
-                item.style.backgroundColor = '#f4f4f4';
+// ... [rest of your existing code remains exactly the same] ...
+function aim(e) {
+    // Get mouse position in relation to SVG
+    var point = getMouseSVG(e);
+    point.x = Math.min(point.x, pivot.x - 7);
+    point.y = Math.max(point.y, pivot.y + 7);
+    
+    var dx = point.x - pivot.x;
+    var dy = point.y - pivot.y;
+    var angle = Math.atan2(dy, dx) + randomAngle;
+    var bowAngle = angle - Math.PI;
+    var distance = Math.min(Math.sqrt((dx * dx) + (dy * dy)), 50);
+    var scale = Math.min(Math.max(distance / 30, 1), 2);
+    
+    // Update bow and arrow visuals
+    TweenMax.to("#bow", 0.3, {
+        scaleX: scale,
+        rotation: bowAngle + "rad",
+        transformOrigin: "right center"
+    });
+    
+    var arrowX = Math.min(pivot.x - ((1 / scale) * distance), 88);
+    TweenMax.to(".arrow-angle", 0.3, {
+        rotation: bowAngle + "rad",
+        svgOrigin: "100 250"
+    });
+    
+    TweenMax.to(".arrow-angle use", 0.3, {
+        x: -distance
+    });
+    
+    TweenMax.to("#bow polyline", 0.3, {
+        attr: {
+            points: "88,200 " + Math.min(pivot.x - ((1 / scale) * distance), 88) + ",250 88,300"
         }
     });
-}
 
-// Handle button clicks (unchanged)
-document.getElementById('save-next').addEventListener('click', () => {
-    if (questionStatus[currentQuestionIndex] !== 'answered') {
-        questionStatus[currentQuestionIndex] = 'answered';
-        answeredCount++;
-        notAnsweredCount--;
-        answeredElement.textContent = answeredCount;
-        notAnsweredElement.textContent = notAnsweredCount;
-    }
-    if (currentQuestionIndex < totalQuestions - 1) {
-        pauseQuestionTimer(currentQuestionIndex);
-        currentQuestionIndex++;
-        loadQuestion();
-    }
-});
+    // Update arc visualization
+    var radius = distance * 9;
+    var offset = {
+        x: (Math.cos(bowAngle) * radius),
+        y: (Math.sin(bowAngle) * radius)
+    };
+    var arcWidth = offset.x * 3;
 
-document.getElementById('mark-review').addEventListener('click', () => {
-    if (questionStatus[currentQuestionIndex] !== 'marked-review') {
-        questionStatus[currentQuestionIndex] = 'marked-review';
-        markedReviewCount++;
-        markedReviewElement.textContent = markedReviewCount;
-        if (questionStatus[currentQuestionIndex] === 'not-answered') {
-            notAnsweredCount--;
-            notAnsweredElement.textContent = notAnsweredCount;
-        }
-    }
-    if (currentQuestionIndex < totalQuestions - 1) {
-        pauseQuestionTimer(currentQuestionIndex);
-        currentQuestionIndex++;
-        loadQuestion();
-    }
-});
-
-document.getElementById('prev-btn').addEventListener('click', () => {
-    if (currentQuestionIndex > 0) {
-        pauseQuestionTimer(currentQuestionIndex);
-        currentQuestionIndex--;
-        loadQuestion();
-    }
-});
-
-document.getElementById('next-btn').addEventListener('click', () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
-        pauseQuestionTimer(currentQuestionIndex);
-        currentQuestionIndex++;
-        loadQuestion();
-    }
-});
-
-// Main timer functions (unchanged)
-function startMainTimer() {
-    mainTimerInterval = setInterval(() => {
-        const hours = Math.floor(mainTimerTime / 3600);
-        const minutes = Math.floor((mainTimerTime % 3600) / 60);
-        const seconds = mainTimerTime % 60;
-        timerElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        mainTimerTime--;
-    }, 1000);
-}
-
-function stopMainTimer() {
-    clearInterval(mainTimerInterval);
-}
-
-// Create pie chart
-function createPieChart() {
-    const ctx = pieChartCanvas.getContext('2d');
-    const attempted = questionStatus.filter(status => status === 'answered').length;
-    const unattempted = questionStatus.filter(status => status === 'not-answered' || status === 'not-visited').length;
-    const marked = questionStatus.filter(status => status === 'marked-review').length;
-
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Attempted', 'Unattempted', 'Marked for Review'],
-            datasets: [{
-                data: [attempted, unattempted, marked],
-                backgroundColor: ['green', 'red', 'blue'],
-            }]
+    TweenMax.to("#arc", 0.3, {
+        attr: {
+            d: "M100,250c" + offset.x + "," + offset.y + "," + (arcWidth - offset.x) + "," + (offset.y + 50) + "," + arcWidth + ",50"
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'Question Status Distribution'
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            const value = context.parsed;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = Math.round((value / total) * 100);
-                            label += `${value} (${percentage}%)`;
-                            return label;
-                        }
-                    }
-                }
-            }
-        }
+        autoAlpha: distance/60
     });
 }
 
-// Modified submit handler
-document.getElementById('submit-btn').addEventListener('click', () => {
-    questionTimers.forEach((timer, index) => {
-        if (timer !== null) {
-            clearInterval(timer);
+function loose() {
+    // Release arrow
+    window.removeEventListener("mousemove", aim);
+    window.removeEventListener("mouseup", loose);
+
+    // Reset bow animation
+    TweenMax.to("#bow", 0.4, {
+        scaleX: 1,
+        transformOrigin: "right center",
+        ease: Elastic.easeOut
+    });
+    
+    TweenMax.to("#bow polyline", 0.4, {
+        attr: {
+            points: "88,200 88,250 88,300"
+        },
+        ease: Elastic.easeOut
+    });
+
+    // Create new arrow
+    var newArrow = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    newArrow.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "#arrow");
+    arrows.appendChild(newArrow);
+
+    // Animate arrow along path
+    var path = MorphSVGPlugin.pathDataToBezier("#arc");
+    TweenMax.to([newArrow], 0.5, {
+        force3D: true,
+        bezier: {
+            type: "cubic",
+            values: path,
+            autoRotate: ["x", "y", "rotation"]
+        },
+        onUpdate: hitTest,
+        onUpdateParams: ["{self}"],
+        onComplete: onMiss,
+        ease: Linear.easeNone
+    });
+    
+    TweenMax.to("#arc", 0.3, {
+        opacity: 0
+    });
+    
+    // Hide previous arrow
+    TweenMax.set(".arrow-angle use", {
+        opacity: 0
+    });
+}
+
+function hitTest(tween) {
+    // Check for collisions with arrow and target
+    var arrow = tween.target[0];
+    var transform = arrow._gsTransform;
+    var radians = transform.rotation * Math.PI / 180;
+    var arrowSegment = {
+        x1: transform.x,
+        y1: transform.y,
+        x2: (Math.cos(radians) * 60) + transform.x,
+        y2: (Math.sin(radians) * 60) + transform.y
+    }
+
+    var intersection = getIntersection(arrowSegment, lineSegment);
+    if (intersection.segment1 && intersection.segment2) {
+        tween.pause();
+        var dx = intersection.x - target.x;
+        var dy = intersection.y - target.y;
+        var distance = Math.sqrt((dx * dx) + (dy * dy));
+        var selector = ".hit";
+        if (distance < 7) {
+            selector = ".bullseye"
         }
-    });
-    stopMainTimer();
-
-    // Enhanced result.txt content
-    let resultContent = "Question\tTime Spent (s)\tVisits\tStatus\n";
-    timeSpent.forEach((time, index) => {
-        let status = questionStatus[index];
-        if (status === 'not-visited') status = 'Unattempted';
-        else if (status === 'not-answered') status = 'Unattempted';
-        else if (status === 'answered') status = 'Attempted';
-        else if (status === 'marked-review') status = 'Marked for Review';
-        
-        resultContent += `Question ${index + 1}\t${time}\t${visitCount[index]}\t${status}\n`;
-    });
-
-    resultContent += `\nTotal Time Remaining: ${timerElement.textContent}`;
-
-    // Download result.txt
-    const blob = new Blob([resultContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'result.txt';
-    a.click();
-    URL.revokeObjectURL(url);
-
-    // Create pie chart after submission
-    createPieChart();
-});
-
-// Initialize (unchanged)
-function initializeQuestionGrid() {
-    for (let i = 1; i <= totalQuestions; i++) {
-        const gridItem = document.createElement('div');
-        gridItem.className = 'grid-item';
-        gridItem.textContent = i < 10 ? `0${i}` : i;
-        gridItem.addEventListener('click', () => {
-            pauseQuestionTimer(currentQuestionIndex);
-            currentQuestionIndex = i - 1;
-            loadQuestion();
-        });
-        questionGrid.appendChild(gridItem);
+        showMessage(selector);
     }
 }
 
-initializeQuestionGrid();
-startMainTimer();
-loadQuestion();
+function onMiss() {
+    // Play sound for miss
+    showMessage(".miss");
+}
+
+function showMessage(selector) {
+    // Play sound for any message (hit or miss)
+    playRandomSound();
+    
+    // Handle all text animations
+    TweenMax.killTweensOf(selector);
+    TweenMax.killChildTweensOf(selector);
+    TweenMax.set(selector, {
+        autoAlpha: 1
+    });
+    
+    TweenMax.staggerFromTo(selector + " path", .5, {
+        rotation: -5,
+        scale: 0,
+        transformOrigin: "center"
+    }, {
+        scale: 1,
+        ease: Back.easeOut
+    }, .05);
+    
+    TweenMax.staggerTo(selector + " path", .3, {
+        delay: 2,
+        rotation: 20,
+        scale: 0,
+        ease: Back.easeIn
+    }, .03);
+}
+
+function getMouseSVG(e) {
+    // Normalize mouse position within SVG coordinates
+    cursor.x = e.clientX;
+    cursor.y = e.clientY;
+    return cursor.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+function getIntersection(segment1, segment2) {
+    // Find intersection point of two line segments
+    var dx1 = segment1.x2 - segment1.x1;
+    var dy1 = segment1.y2 - segment1.y1;
+    var dx2 = segment2.x2 - segment2.x1;
+    var dy2 = segment2.y2 - segment2.y1;
+    var cx = segment1.x1 - segment2.x1;
+    var cy = segment1.y1 - segment2.y1;
+    var denominator = dy2 * dx1 - dx2 * dy1;
+    
+    if (denominator == 0) {
+        return null;
+    }
+    
+    var ua = (dx2 * cy - dy2 * cx) / denominator;
+    var ub = (dx1 * cy - dy1 * cx) / denominator;
+    
+    return {
+        x: segment1.x1 + ua * dx1,
+        y: segment1.y1 + ua * dy1,
+        segment1: ua >= 0 && ua <= 1,
+        segment2: ub >= 0 && ub <= 1
+    };
+}
