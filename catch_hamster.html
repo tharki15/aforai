@@ -127,6 +127,9 @@
     let lastHole;
     let timeUp = false;
     let score = 0;
+    let missCount = 0;
+    let minTime = 200;
+    let maxTime = 1000;
 
     function randomTime(min, max) {
       return Math.round(Math.random() * (max - min) + min);
@@ -135,21 +138,27 @@
     function randomHole(holes) {
       const idx = Math.floor(Math.random() * holes.length);
       const hole = holes[idx];
-
       if (hole === lastHole) return randomHole(holes);
-
       lastHole = hole;
       return hole;
     }
 
     function peep() {
-      const time = randomTime(1700, 2000);
+      const time = randomTime(minTime, maxTime);
       const hole = randomHole(holes);
       const mole = hole.querySelector('.mole');
-      mole.clicked = false; // Reset clicked flag
+      mole.clicked = false;
       hole.classList.add("up");
+
       setTimeout(() => {
         hole.classList.remove("up");
+        if (!mole.clicked) {
+          missCount++;
+          if (missCount >= 3) {
+            endGame();
+            return;
+          }
+        }
         if (!timeUp) peep();
       }, time);
     }
@@ -158,25 +167,35 @@
       scoreBoard.textContent = 0;
       timeUp = false;
       score = 0;
+      missCount = 0;
+      minTime = 1700;
+      maxTime = 2000;
       button.style.visibility = "hidden";
       endSound.pause();
       endSound.currentTime = 0;
       peep();
-      setTimeout(() => {
-        timeUp = true;
-        button.innerHTML = "Try again?";
-        button.style.visibility = "visible";
-        endSound.play();
-      }, 10000);
     }
 
     function bonk(e) {
       if (!e.isTrusted) return;
-      if (this.clicked) return; // Prevent multiple clicks
-      this.clicked = true; // Mark as clicked
+      if (this.clicked) return;
+      this.clicked = true;
       score++;
       this.parentNode.classList.remove("up");
       scoreBoard.textContent = score;
+
+      // Speed up the mole appearance
+      if (minTime > 400) {
+        minTime -= 50;
+        maxTime -= 50;
+      }
+    }
+
+    function endGame() {
+      timeUp = true;
+      button.innerHTML = "Try again?";
+      button.style.visibility = "visible";
+      endSound.play();
     }
 
     moles.forEach((mole) => mole.addEventListener("click", bonk));
