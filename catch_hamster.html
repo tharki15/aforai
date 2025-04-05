@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Catch the Hamster</title>
+  <title>Catch the Chhota Fanta</title>
   <style>
     @import url("https://fonts.googleapis.com/css?family=Nunito");
 
@@ -72,7 +72,7 @@
     }
 
     .mole {
-      background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1159990/mole.svg") bottom center no-repeat;
+      background: url("https://www.pnglook.com/files/preview/960x1002/21706677650s89zxmhiaomcwwk3aeda2qqfnfpqf466sjfzq1wtjweeye3vvh6kg4ddtsktula1p8c0xnxafrtdva51nywgm7br0xgkuxyx5viz.png") bottom center no-repeat;
       background-size: 60%;
       position: absolute;
       top: 100%;
@@ -103,7 +103,7 @@
   </style>
 </head>
 <body>
-  <h1>Catch the Hamster!</h1>
+  <h1>Catch the Chhota Fanta!</h1>
   <h2 class="score">0</h2>
   <div class="game">
     <div class="hole"><div class="mole"></div></div>
@@ -143,8 +143,10 @@
     }
 
     function peep() {
-      const time = randomTime(200, 1000);
+      const time = randomTime(1700, 2000);
       const hole = randomHole(holes);
+      const mole = hole.querySelector('.mole');
+      mole.clicked = false; // Reset clicked flag
       hole.classList.add("up");
       setTimeout(() => {
         hole.classList.remove("up");
@@ -170,8 +172,10 @@
 
     function bonk(e) {
       if (!e.isTrusted) return;
+      if (this.clicked) return; // Prevent multiple clicks
+      this.clicked = true; // Mark as clicked
       score++;
-      this.classList.remove("up");
+      this.parentNode.classList.remove("up");
       scoreBoard.textContent = score;
     }
 
