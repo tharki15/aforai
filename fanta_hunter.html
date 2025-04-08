@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Granny's Haunted Choices</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1a0000;
+      color: #fff;
+      text-align: center;
+    }
+
+    #game-container { padding: 20px; }
+
+    .granny {
+      width: 310px;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .houses {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .house {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+      animation: blink 1s infinite;
+    }
+
+    .house img { width: 100%; height: 100%; }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .item-reveal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 120px;
+      height: 120px;
+      background-color: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: zoomIn 0.4s ease forwards;
+    }
+
+    .item-reveal img {
+      width: 80px;
+      transform: scale(0);
+      animation: popItem 0.4s ease forwards;
+    }
+
+    @keyframes popItem {
+      to { transform: scale(1); }
+    }
+
+    @keyframes zoomIn {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+
+    .hidden { display: none; }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1.3em;
+    }
+
+    #restart-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #900;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <img src="yogi.png" class="granny" alt="Granny">
+    <div class="scoreboard">
+      <div>🧭 Level: <span id="levelNum">1</span></div>
+      <div>⭐ Score: <span id="score">0</span></div>
+      <div>⏱️ Time: <span id="timer">20</span>s</div>
+    </div>
+    <div class="houses" id="houses"></div>
+    <div id="status"></div>
+    <button id="restart-btn" class="hidden" onclick="startGame()">Restart Game</button>
+  </div>
+
+  <!-- Audio -->
+  <audio id="ghostSound" src="sound1.mp3"></audio>
+  <audio id="itemSound" src="sound8.mp3"></audio>
+  <audio id="bgMusic" src="bg.mp3" loop></audio>
+
+  <script>
+    const houseImage = 'house.png';
+    const itemData = {
+      torch: { img: 'torch.png', min: 25, max: 35 },
+      weapon: { img: 'weapon.png', min: 75, max: 100 },
+      phone: { img: 'phone.png', min: 30, max: 40 },
+      book: { img: 'book.png', min: 40, max: 50 },
+      ghost: { img: 'ghost.png', points: 0 }
+    };
+
+    const levels = {
+      1: { houses: 3, ghosts: 1, items: ['torch', 'weapon'] },
+      2: { houses: 5, ghosts: 2, items: ['phone', 'book', 'weapon'] },
+      3: { houses: 9, ghosts: 4, items: ['torch', 'weapon', 'phone', 'book'] },
+      4: { houses: 12, ghosts: 7, items: ['torch', 'weapon', 'phone', 'book'] }
+    };
+
+    let currentLevel = 1;
+    let totalPoints = 0;
+    let timer = 20;
+    let timerInterval;
+
+    const housesContainer = document.getElementById('houses');
+    const levelNumText = document.getElementById('levelNum');
+    const scoreText = document.getElementById('score');
+    const timerText = document.getElementById('timer');
+    const statusText = document.getElementById('status');
+    const restartBtn = document.getElementById('restart-btn');
+
+    const ghostSound = document.getElementById('ghostSound');
+    const itemSound = document.getElementById('itemSound');
+    const bgMusic = document.getElementById('bgMusic');
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function getRandomPoints(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function startGame() {
+      stopSounds();
+      currentLevel = 1;
+      totalPoints = 0;
+      levelNumText.textContent = '1';
+      scoreText.textContent = '0';
+      statusText.textContent = '';
+      restartBtn.classList.add('hidden');
+      generateLevel(currentLevel);
+    }
+
+    function stopSounds() {
+      [ghostSound, itemSound].forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timer = 20;
+      timerText.textContent = timer;
+      timerInterval = setInterval(() => {
+        timer--;
+        timerText.textContent = timer;
+        if (timer <= 0) {
+          clearInterval(timerInterval);
+          gameOver("⏰ Time Khatam Buddhi ki GA*D FATT GAYi");
+        }
+      }, 1000);
+    }
+
+    function generateLevel(level) {
+      clearInterval(timerInterval);
+      startTimer();
+
+      housesContainer.innerHTML = '';
+      const config = levels[level];
+      const itemsArray = [];
+
+      for (let i = 0; i < config.ghosts; i++) {
+        itemsArray.push({ name: 'ghost', img: itemData.ghost.img, points: 0 });
+      }
+
+      while (itemsArray.length < config.houses) {
+        const randItem = config.items[Math.floor(Math.random() * config.items.length)];
+        const { img, min, max } = itemData[randItem];
+        itemsArray.push({
+          name: randItem,
+          img: img,
+          points: getRandomPoints(min, max)
+        });
+      }
+
+      shuffleArray(itemsArray);
+
+      itemsArray.forEach(item => {
+        const houseDiv = document.createElement('div');
+        houseDiv.className = 'house';
+        houseDiv.innerHTML = `
+          <img src="${houseImage}" alt="House">
+          <div class="item-reveal hidden"><img src="${item.img}" alt="${item.name}"></div>
+        `;
+        houseDiv.dataset.item = JSON.stringify(item);
+        houseDiv.onclick = () => handleChoice(houseDiv);
+        housesContainer.appendChild(houseDiv);
+      });
+    }
+
+    function handleChoice(houseElement) {
+      clearInterval(timerInterval);
+      const allHouses = document.querySelectorAll('.house');
+      allHouses.forEach(h => h.onclick = null);
+
+      const item = JSON.parse(houseElement.dataset.item);
+      const revealDiv = houseElement.querySelector('.item-reveal');
+      revealDiv.classList.remove('hidden');
+
+      if (item.name === 'ghost') {
+        ghostSound.play();
+        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+        setTimeout(() => gameOver("👻 Granny found a ghost! Game Over."), 1000);
+      } else {
+        itemSound.play();
+        totalPoints += item.points;
+        scoreText.textContent = totalPoints;
+        setTimeout(() => {
+          currentLevel++;
+          if (currentLevel <= 4) {
+            levelNumText.textContent = currentLevel;
+            generateLevel(currentLevel);
+          } else {
+            finalResult();
+          }
+        }, 1200);
+      }
+    }
+
+    function gameOver(message) {
+      stopSounds();
+      statusText.innerHTML = `${message}<br>Total Points: ${totalPoints}`;
+      restartBtn.classList.remove('hidden');
+    }
+
+    function finalResult() {
+      stopSounds();
+      const result = totalPoints > 150
+        ? `🏆 Buddhi JEET GAYI BKL<br>Total Points: ${totalPoints} — You Win!`
+        : `😢 Granny Chud gyi BKL.<br>Total Points: ${totalPoints} — Game Over.`;
+      statusText.innerHTML = result;
+      restartBtn.classList.remove('hidden');
+    }
+
+    window.onload = () => {
+      bgMusic.volume = 0.5;
+      bgMusic.loop = true;
+      bgMusic.play().catch(() => {
+        document.body.addEventListener('click', () => {
+          bgMusic.play();
+        }, { once: true });
+      });
+      startGame();
+    };
+  </script>
+</body>
+</html>
