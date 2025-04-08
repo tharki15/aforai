@@ -72,20 +72,8 @@
   <a class="game-button" href="zombie.html">🧟  Zombie</a>
   <div id="visitor-counter">Visitors: 0</div>
 
-  <script>
-    // Using localStorage for demo (replace with server API for real tracking)
-    const counterElement = document.getElementById('visitor-counter');
+  <a class="game-button" href="fanta_hunter.html">👻 Haunted Fanta Hunter</a>
+  <div id="visitor-counter">Visitors: 0</div>
 
-    // Get existing count or initialize
-    let visitCount = localStorage.getItem('visitCount');
-    if (!visitCount) {
-      visitCount = 1;
-    } else {
-      visitCount = parseInt(visitCount) + 1;
-    }
-
-    localStorage.setItem('visitCount', visitCount);
-    counterElement.textContent = `Visitors: ${visitCount}`;
-  </script>
 </body>
 </html>
