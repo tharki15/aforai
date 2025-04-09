@@ -114,7 +114,6 @@
       border-radius: 5px;
     }
   </style>
-  <!-- Remove MongoDB Realm SDK as we'll use the server API -->
 </head>
 <body>
   <div id="game-container">
@@ -141,10 +140,12 @@
   <audio id="bgMusic" src="bg.mp3" loop></audio>
 
   <script>
-    // Remove MongoDB Atlas Configuration and use server API instead
+    // API URL for the server
+    const API_URL = 'https://aforai.onrender.com';
+    
     async function saveScore(playerName, score) {
       try {
-        const response = await fetch('https://aforai.xyz:3000/api/save-score', {
+        const response = await fetch(`${API_URL}/api/save-score`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -168,7 +169,7 @@
 
     async function loadTopScores() {
       try {
-        const response = await fetch('https://aforai.xyz:3000/api/scoreboard');
+        const response = await fetch(`${API_URL}/api/scoreboard`);
         if (!response.ok) {
           throw new Error('Failed to load scores');
         }
@@ -297,32 +298,35 @@
       });
     }
 
-    function handleChoice(houseElement) {
-      clearInterval(timerInterval);
-      const allHouses = document.querySelectorAll('.house');
-      allHouses.forEach(h => h.onclick = null);
+    function handleChoice(houseDiv) {
+      if (houseDiv.classList.contains('revealed')) return;
 
-      const item = JSON.parse(houseElement.dataset.item);
-      const revealDiv = houseElement.querySelector('.item-reveal');
+      const item = JSON.parse(houseDiv.dataset.item);
+      const revealDiv = houseDiv.querySelector('.item-reveal');
       revealDiv.classList.remove('hidden');
+      houseDiv.classList.add('revealed');
 
       if (item.name === 'ghost') {
         ghostSound.play();
-        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
-        setTimeout(() => gameOver("👻 Granny found a ghost! Game Over."), 1000);
+        gameOver("👻 BHAAG BKL GHOST MIL GAYA!");
       } else {
         itemSound.play();
         totalPoints += item.points;
         scoreText.textContent = totalPoints;
-        setTimeout(() => {
-          currentLevel++;
-          if (currentLevel <= 4) {
+        
+        const allRevealed = Array.from(housesContainer.children).every(house => 
+          house.classList.contains('revealed')
+        );
+        
+        if (allRevealed) {
+          if (currentLevel < 4) {
+            currentLevel++;
             levelNumText.textContent = currentLevel;
             generateLevel(currentLevel);
           } else {
             finalResult();
           }
-        }, 1200);
+        }
       }
     }
 
@@ -359,7 +363,7 @@
       saveScore(playerName || "Anonymous", totalPoints);
 
       const result = totalPoints > 150
-        ? `🏆 Buddhi JEET GAYI BKL<br>Total Points: ${totalPoints} — You Win!`
+        ? `�� Buddhi JEET GAYI BKL<br>Total Points: ${totalPoints} — You Win!`
         : `😢 Granny Chud gyi BKL.<br>Total Points: ${totalPoints} — Game Over.`;
 
       statusText.innerHTML = result;
@@ -367,12 +371,9 @@
     }
 
     window.onload = () => {
-      bgMusic.volume = 0.5;
-      bgMusic.loop = true;
-      bgMusic.play().catch(() => {
-        document.body.addEventListener('click', () => {
-          bgMusic.play();
-        }, { once: true });
+      bgMusic.volume = 0.3;
+      bgMusic.play().catch(err => {
+        console.log("Audio autoplay blocked:", err);
       });
       startGame();
       loadTopScores();
