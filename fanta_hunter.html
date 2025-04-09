@@ -16,9 +16,9 @@
     #game-container { padding: 20px; }
 
     .granny {
-      width: 310px;
+      width: 120px;
       margin-bottom: 20px;
-      animation: bounce 2s infinite;
+      animation: bounce 0.5s infinite;
     }
 
     @keyframes bounce {
@@ -34,6 +34,16 @@
       margin-bottom: 10px;
     }
 
+    #scoreboard {
+      margin-top: 30px;
+    }
+
+    #scoreList {
+      text-align: left;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
     .houses {
       display: flex;
       justify-content: center;
@@ -44,10 +54,10 @@
 
     .house {
       position: relative;
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
       cursor: pointer;
-      animation: blink 1s infinite;
+      animation: blink 0.7s infinite;
     }
 
     .house img { width: 100%; height: 100%; }
@@ -104,18 +114,25 @@
       border-radius: 5px;
     }
   </style>
+  <!-- Remove MongoDB Realm SDK as we'll use the server API -->
 </head>
 <body>
   <div id="game-container">
-    <img src="yogi.png" class="granny" alt="Granny">
+    <img src="granny.png" class="granny" alt="Granny">
     <div class="scoreboard">
       <div>🧭 Level: <span id="levelNum">1</span></div>
       <div>⭐ Score: <span id="score">0</span></div>
       <div>⏱️ Time: <span id="timer">20</span>s</div>
     </div>
+
     <div class="houses" id="houses"></div>
     <div id="status"></div>
     <button id="restart-btn" class="hidden" onclick="startGame()">Restart Game</button>
+
+    <div id="scoreboard">
+      <h3>🏅 Top 10 Hunters</h3>
+      <ul id="scoreList" style="list-style:none; padding:0;"></ul>
+    </div>
   </div>
 
   <!-- Audio -->
@@ -124,6 +141,50 @@
   <audio id="bgMusic" src="bg.mp3" loop></audio>
 
   <script>
+    // Remove MongoDB Atlas Configuration and use server API instead
+    async function saveScore(playerName, score) {
+      try {
+        const response = await fetch('http://localhost:3000/api/save-score', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: playerName,
+            score: score,
+            timeTaken: 80 - timer // max possible time
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to save score');
+        }
+        
+        await loadTopScores();
+      } catch (error) {
+        console.error("Error saving score:", error);
+      }
+    }
+
+    async function loadTopScores() {
+      try {
+        const response = await fetch('http://localhost:3000/api/scoreboard');
+        if (!response.ok) {
+          throw new Error('Failed to load scores');
+        }
+        
+        const scores = await response.json();
+        const scoreList = document.getElementById('scoreList');
+        scoreList.innerHTML = scores
+          .map((score, index) => `
+            <li>${index + 1}. ${score.name}: ${score.score} points</li>
+          `)
+          .join('');
+      } catch (error) {
+        console.error("Error loading scores:", error);
+      }
+    }
+
     const houseImage = 'house.png';
     const itemData = {
       torch: { img: 'torch.png', min: 25, max: 35 },
@@ -266,16 +327,28 @@
     }
 
     function gameOver(message) {
+      clearInterval(timerInterval);
       stopSounds();
-      statusText.innerHTML = `${message}<br>Total Points: ${totalPoints}`;
+      statusText.textContent = message;
       restartBtn.classList.remove('hidden');
+      
+      const playerName = prompt("Enter your name for the scoreboard:");
+      if (playerName) {
+        saveScore(playerName, totalPoints);
+      }
     }
 
     function finalResult() {
       stopSounds();
+      const timeTaken = 80 - timer; // max possible time
+      const playerName = prompt("Naam batao Granny Hunter ka:");
+
+      saveScore(playerName || "Anonymous", totalPoints);
+
       const result = totalPoints > 150
         ? `🏆 Buddhi JEET GAYI BKL<br>Total Points: ${totalPoints} — You Win!`
         : `😢 Granny Chud gyi BKL.<br>Total Points: ${totalPoints} — Game Over.`;
+
       statusText.innerHTML = result;
       restartBtn.classList.remove('hidden');
     }
@@ -289,6 +362,7 @@
         }, { once: true });
       });
       startGame();
+      loadTopScores();
     };
   </script>
 </body>
