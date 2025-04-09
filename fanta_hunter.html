@@ -144,7 +144,7 @@
     // Remove MongoDB Atlas Configuration and use server API instead
     async function saveScore(playerName, score) {
       try {
-        const response = await fetch('http://localhost:3000/api/save-score', {
+        const response = await fetch('https://aforai.xyz:3000/api/save-score', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -168,7 +168,7 @@
 
     async function loadTopScores() {
       try {
-        const response = await fetch('http://localhost:3000/api/scoreboard');
+        const response = await fetch('https://aforai.xyz:3000/api/scoreboard');
         if (!response.ok) {
           throw new Error('Failed to load scores');
         }
@@ -332,8 +332,14 @@
       statusText.textContent = message;
       restartBtn.classList.remove('hidden');
       
-      const playerName = prompt("Enter your name for the scoreboard:");
-      if (playerName) {
+      let playerName = localStorage.getItem('grannyHunterName');
+      if (!playerName) {
+        playerName = prompt("Enter your name for the scoreboard:");
+        if (playerName) {
+          localStorage.setItem('grannyHunterName', playerName);
+          saveScore(playerName, totalPoints);
+        }
+      } else {
         saveScore(playerName, totalPoints);
       }
     }
@@ -341,7 +347,14 @@
     function finalResult() {
       stopSounds();
       const timeTaken = 80 - timer; // max possible time
-      const playerName = prompt("Naam batao Granny Hunter ka:");
+      let playerName = localStorage.getItem('grannyHunterName');
+      
+      if (!playerName) {
+        playerName = prompt("Naam batao Granny Hunter ka:");
+        if (playerName) {
+          localStorage.setItem('grannyHunterName', playerName);
+        }
+      }
 
       saveScore(playerName || "Anonymous", totalPoints);
 
