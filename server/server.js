@@ -7,7 +7,9 @@ app.use(cors());
 app.use(express.json());
 
 // ⛓️ Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://ay4875007:KcMgklZvcf74nHQf@cluster0.brlyxxc.mongodb.net/gabe_db?retryWrites=true&w=majority', {
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://ay4875007:KcMgklZvcf74nHQf@cluster0.brlyxxc.mongodb.net/gabe_db?retryWrites=true&w=majority';
+
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -47,6 +49,7 @@ app.post('/api/save-score', async (req, res) => {
     
     res.status(201).json({ message: 'Score saved!' });
   } catch (error) {
+    console.error("Error saving score:", error);
     res.status(500).json({ error: 'Error saving score' });
   }
 });
@@ -59,10 +62,13 @@ app.get('/api/scoreboard', async (req, res) => {
       .limit(10);
     res.json(topPlayers);
   } catch (error) {
+    console.error("Error fetching scoreboard:", error);
     res.status(500).json({ error: 'Failed to fetch scoreboard' });
   }
 });
 
-app.listen(3000, () => {
-  console.log('🔥 Server running on http://localhost:3000');
+// Use the PORT environment variable provided by Render
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🔥 Server running on port ${PORT}`);
 });
