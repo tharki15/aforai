@@ -22,14 +22,29 @@ const hunterSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const Hunter = mongoose.model('Hunter', hunterSchema);
+// Use the 'scores' collection instead of the default 'hunters'
+const Hunter = mongoose.model('Hunter', hunterSchema, 'scores');
 
 // 📝 Save Score API
 app.post('/api/save-score', async (req, res) => {
   const { name, score, timeTaken } = req.body;
   try {
-    const newScore = new Hunter({ name, score, timeTaken });
-    await newScore.save();
+    // Find existing score for this player
+    const existingScore = await Hunter.findOne({ name: name });
+    
+    if (existingScore) {
+      // Update the score if the new score is higher
+      if (score > existingScore.score) {
+        existingScore.score = score;
+        existingScore.timeTaken = timeTaken;
+        await existingScore.save();
+      }
+    } else {
+      // Create new score if player doesn't exist
+      const newScore = new Hunter({ name, score, timeTaken });
+      await newScore.save();
+    }
+    
     res.status(201).json({ message: 'Score saved!' });
   } catch (error) {
     res.status(500).json({ error: 'Error saving score' });
