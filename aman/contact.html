@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Me</title>
+  <style>
+    :root {
+      --royal-black: #0c0c0c;
+      --royal-yellow: #f5c518;
+    }
+
+    body {
+      margin: 0;
+      background: var(--royal-black);
+      color: var(--royal-yellow);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      animation: glow 2s infinite alternate;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 2rem;
+      background: #1a1a1a;
+      border-left: 5px solid var(--royal-yellow);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(245, 197, 24, 0.4);
+      animation: slideIn 1.2s ease;
+    }
+
+    label {
+      font-size: 1.2rem;
+      margin-bottom: 0.3rem;
+      color: #fff799;
+    }
+
+    input, select {
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--royal-black);
+    }
+
+    input::placeholder {
+      color: #999;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid var(--royal-yellow);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--royal-black);
+      background: var(--royal-yellow);
+      font-weight: bold;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(245, 197, 24, 0.3);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(245, 197, 24, 0.6);
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px var(--royal-yellow), 0 0 8px var(--royal-yellow);
+      }
+      to {
+        text-shadow: 0 0 13px #ffd450, 0 0 20px #ffc400;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Let's Connect!</h1>
+
+  <form id="contactForm">
+    <div>
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your full name" required/>
+    </div>
+
+    <div>
+      <label for="profession">Your Profession</label>
+      <input type="text" id="profession" name="profession" placeholder="e.g., Student, Developer, Designer" required/>
+    </div>
+
+    <div>
+      <label for="reason">Why do you want to contact me?</label>
+      <select id="reason" name="reason" required>
+        <option value="" disabled selected>Select a reason</option>
+        <option value="For Work (HIRE)">For Work (HIRE)</option>
+        <option value="For Meeting">For Meeting</option>
+        <option value="For Doubts">For Doubts</option>
+        <option value="For Collaboration">For Collaboration</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="buttons">
+      <button type="button" onclick="contactVia('whatsapp')">Contact via WhatsApp</button>
+      <button type="button" onclick="contactVia('email')">Contact via Email</button>
+    </div>
+  </form>
+
+  <script>
+    function contactVia(method) {
+      const name = document.getElementById("name").value.trim();
+      const profession = document.getElementById("profession").value.trim();
+      const reason = document.getElementById("reason").value;
+
+      if (!name || !profession || !reason) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const message = `Hello! I'm ${name}, a ${profession}. Reason: ${reason}`;
+
+      if (method === "whatsapp") {
+        const encodedMsg = encodeURIComponent(message);
+        const whatsappURL = `https://wa.me/919408692305?text=${encodedMsg}`;
+        window.location.href = whatsappURL;
+      } else if (method === "email") {
+        const subject = encodeURIComponent("Contact Request from Portfolio");
+        const body = encodeURIComponent(message);
+        const mailtoURL = `mailto:ay4875007@gmail.com?subject=${subject}&body=${body}`;
+        window.location.href = mailtoURL;
+      }
+    }
+  </script>
+
+</body>
+</html>

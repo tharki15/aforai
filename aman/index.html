@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Aman Yadav Portfolio</title>
+
+  <style>
+    :root {
+      --bg-color: #000000; /* Royal black background */
+      --text-color: #FFD700; /* Royal yellow text */
+      --accent: #FFD700; /* Royal yellow accent */
+      --alt-accent: #FFA500; /* Orange accent */
+      --card-bg: #1a1a1a; /* Dark card background */
+      --highlight: #4682B4; /* Light navy blue for lists */
+      --list-text: #4682B4; /* Light navy blue for list items */
+    }
+
+    body.light-mode {
+      --bg-color: #ffffff; /* White background */
+      --text-color: #FF8C00; /* Dark orange text */
+      --accent: #FF8C00; /* Dark orange accent */
+      --alt-accent: #FF4500; /* Orange-red accent */
+      --card-bg: #f5f5f5; /* Light card background */
+      --highlight: #00008B; /* Dark royal black for lists */
+      --list-text: #00008B; /* Dark royal black for list items */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg-color);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-color);
+      overflow-x: hidden;
+      transition: all 0.3s ease;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      opacity: 0;
+      transform: translate(100px, -50px) rotate(20deg);
+      animation: organize 0.7s ease-out 0.3s forwards;
+    }
+
+    nav .links a {
+      margin-left: 30px;
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    nav .links a:hover {
+      color: var(--accent);
+    }
+
+    .toggle-theme {
+      font-size: 22px;
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-theme:hover {
+      color: var(--alt-accent);
+      transform: scale(1.1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 60px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .content {
+      max-width: 1200px;
+      opacity: 0;
+      transform: translate(200px, -150px) rotate(25deg);
+      animation: organize 0.5s ease-out 0.1s forwards;
+    }
+
+    .name-text {
+      font-size: 3rem; /* Larger size for name */
+      margin-bottom: 10px;
+      color: var(--text-color);
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.5s forwards;
+    }
+
+    .typing-text {
+      font-size: 1.8rem; /* Slightly larger for typing text */
+      color: var(--accent);
+      margin-bottom: 20px;
+      border-right: 2px solid var(--accent);
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 2.5s steps(150, end) forwards, blink 0.5s step-end infinite;
+    }
+
+    .skills-text {
+      font-size: 1.8rem; /* Large but smaller than name */
+      margin-bottom: 20px;
+      height: 2rem;
+      color: var(--text-color);
+    }
+
+    .skills-text span {
+      color: var(--accent);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text-color);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .socials {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .socials a {
+      width: 40px;
+      height: 40px;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: var(--text-color);
+      transition: all 0.2s ease;
+    }
+
+    .socials a:hover {
+      background: var(--accent);
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    .download-btn {
+      padding: 10px 25px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .download-btn:hover {
+      background: var(--alt-accent);
+      transform: scale(1.05);
+    }
+
+    #about {
+      max-width: 800px;
+      margin: 0px auto;
+      padding: 0px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      animation: fadeSlideUp 1s ease-out 0.5s forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    #about p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    #about ul {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    #about ul li {
+      margin-bottom: 8px;
+      color: var(--list-text);
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeSlideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes organize {
+      to {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0);
+      }
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    @media (max-width: 992px) {
+      .container {
+        padding: 40px 20px;
+      }
+      
+      .name-text {
+        font-size: 2.5rem;
+      }
+      
+      .typing-text, .skills-text {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      nav .links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+      }
+      
+      nav .links a {
+        margin-left: 0;
+      }
+
+      .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 30px 15px;
+      }
+
+      .name-text {
+        font-size: 2.2rem;
+      }
+      
+      .typing-text, .skills-text {
+        font-size: 1.8rem;
+      }
+      .skills-text {
+        font-size: 1.8rem;
+      }
+      
+      #about {
+        padding: 0 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .name-text {
+        font-size: 1.8rem;
+      }
+      
+      .typing-text, .skills-text {
+        font-size: 1.1rem;
+      }
+      
+      .socials {
+        justify-content: center;
+      }
+      
+      .download-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <button class="toggle-theme" onclick="toggleTheme()" title="Toggle Theme">
+      <i id="theme-icon" class="fas fa-moon"></i>
+    </button>
+    <div class="links">
+      <a href="#">Home</a>
+      <a href="about.html" target="_blank">About</a>
+      <a href="skills.html" target="_blank">Skills</a>
+      <a href="portfolio.html" target="_blank">Portfolio</a>
+      <a href="contact.html" target="_blank">Contact</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <div class="name-text">Hello, It's Me <br><strong>Aman Yadav</strong></div>
+      <div class="typing-text" id="typing">And I'm a 3rd Year Student | GATE CSE AIR 433 and GATE DA AIR 295</div>
+      
+      <div class="skills-text">I code in <span id="coding-language">C</span></div>
+
+      <div class="socials">
+        <a href="https://www.facebook.com/share/18hsWKCFt4/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://github.com/tharki15" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/aman-yadav-4a39172a1" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+
+      <button class="download-btn" onclick="window.location.href='aman-yadav-resume.pdf'" download>
+        Download CV
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const body = document.body;
+      const icon = document.getElementById("theme-icon");
+      body.classList.toggle("light-mode");
+      icon.classList.toggle("fa-moon");
+      icon.classList.toggle("fa-sun");
+    }
+
+    // Language cycling
+    const languages = ["C", "C++", "Python", "HTML", "CSS", "JS", "DSA"];
+    let currentLangIndex = 0;
+    const languageElement = document.getElementById("coding-language");
+    
+    function cycleLanguages() {
+      currentLangIndex = (currentLangIndex + 1) % languages.length;
+      languageElement.textContent = languages[currentLangIndex];
+      setTimeout(cycleLanguages, 1000);
+    }
+
+    // Initialize animations
+    window.onload = () => {
+      // Start typing animation
+      const typing = document.getElementById("typing");
+      const text = typing.textContent;
+      typing.textContent = '';
+      typing.style.width = '0';
+      void typing.offsetWidth; // force reflow
+      typing.textContent = text;
+      
+      // Start language cycling
+      setTimeout(cycleLanguages, 3000);
+    };
+  </script>
+</body>
+</html>
