@@ -74,6 +74,8 @@
             max-width: 800px;
             margin: 0 auto 2rem;
             animation: fadeIn var(--animation-duration) ease-out 0.6s both;
+            padding: 0 1rem;
+            word-wrap: break-word;
         }
         
         .gate-results {
@@ -82,6 +84,7 @@
             gap: 2rem;
             margin-bottom: 3rem;
             animation: fadeInUp var(--animation-duration) ease-out 0.9s both;
+            flex-wrap: wrap;
         }
         
         .gate-card {
@@ -118,9 +121,7 @@
             margin-bottom: 2rem;
             text-align: center;
             position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 100%;
         }
         
         .section-title::after {
@@ -188,6 +189,13 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 0.5rem;
+        }
+        
+        .skill-name span:first-child {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
         }
         
         .skill-bar {
@@ -293,6 +301,48 @@
             border-top: 1px solid rgba(255, 215, 0, 0.2);
         }
         
+        /* Typing animation styles */
+        .typing-text {
+            font-size: 1.5rem;
+            color: var(--royal-gold);
+            margin-bottom: 20px;
+            border-right: 2px solid var(--royal-gold);
+            white-space: wrap;
+            overflow: hidden;
+            width: 0;
+            margin: 0 auto;
+        }
+        
+        #typing {
+            animation: typing 2.8s steps(40, end) forwards, blink 0.5s step-end infinite;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+        }
+        
+        #typing2 {
+            animation: typing2 2.8s steps(40, end) 2.8s forwards, blink 0.5s step-end infinite;
+            font-size: 1.0rem;
+            color: var(--light-gold);
+            margin-bottom: 2rem;
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes typing2 {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--royal-gold); }
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -302,32 +352,89 @@
                 font-size: 1.4rem;
             }
             
+            .tagline {
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+            
             .gate-results {
                 flex-direction: column;
                 align-items: center;
+                gap: 1rem;
+            }
+            
+            .gate-card {
+                width: 100%;
+                max-width: 300px;
             }
             
             .skills-container {
                 grid-template-columns: 1fr;
             }
-            .typing-text {
+            
+            #typing {
+                font-size: 2.5rem;
+            }
+            
+            #typing2 {
+                font-size: 1.4rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .skill-category h3 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            #typing {
+                font-size: 2rem;
+            }
+            
+            #typing2 {
+                font-size: 1rem;
+            }
+            
+            .tagline {
+                font-size: 0.9rem;
+            }
+            
+            .gate-card h3 {
+                font-size: 1rem;
+            }
+            
+            .gate-card p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
                 font-size: 1.5rem;
-                color: var(--accent);
-                margin-bottom: 20px;
-                border-right: 2px solid var(--accent);
-                white-space: nowrap;
-                overflow: hidden;
-                width: 0;
-                animation: typing 2.8s steps(150, end) forwards, blink 0.5s step-end infinite;
-              }
-              @keyframes typing {
-                from { width: 0; }
-                to { width: 100%; }
-              }
-              @keyframes typing2 {
-                from { width: 0; }
-                to { width: 100%; }
-              }
+            }
+            
+            .skill-name {
+                flex-direction: column;
+            }
+            
+            .skill-name span:first-child {
+                max-width: 100%;
+                white-space: normal;
+                margin-bottom: 0.3rem;
+            }
         }
     </style>
 </head>
