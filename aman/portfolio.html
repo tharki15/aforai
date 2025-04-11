@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Portfolio</title>
+  <style>
+    :root {
+      --royal-black: #0c0c0c;
+      --royal-yellow: #f5c518;
+    }
+
+    body {
+      margin: 0;
+      background: var(--royal-black);
+      color: var(--royal-yellow);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+      animation: glow 2s infinite alternate;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: #fff799;
+    }
+
+    section {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--royal-yellow);
+      padding-bottom: 0.5rem;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .project-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .project-card {
+      background-color: #1a1a1a;
+      border-left: 4px solid var(--royal-yellow);
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(245, 197, 24, 0.2);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInCard 1s ease forwards;
+    }
+
+    .project-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(245, 197, 24, 0.7);
+    }
+
+    .project-card h3 {
+      margin-top: 0;
+      color: #fff700;
+    }
+
+    .project-card p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #fdf1a3;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px var(--royal-yellow), 0 0 10px var(--royal-yellow);
+      }
+      to {
+        text-shadow: 0 0 20px #ffd450, 0 0 30px #ffc400;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInCard {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Text */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .project-card h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>My Portfolio</h1>
+    <p>Showcasing projects built with love, logic, and a splash of glow ✨</p>
+  </header>
+
+  <section>
+    <h2>🚀 C / C++ Projects</h2>
+    <div class="project-grid">
+      <div class="project-card" style="animation-delay: 0.2s">
+        <h3>Bank Management System</h3>
+        <p>CLI-based project in C++ to manage customer accounts, deposits, withdrawals, and history logs.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 0.4s">
+        <h3>Snake Game</h3>
+        <p>Classic Snake game using C graphics library. Real-time control and score system included.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 0.6s">
+        <h3>Library Management System</h3>
+        <p>Built in C++, this console-based system handles book borrowing, returns, and inventory management.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 0.8s">
+        <h3>Student Record System</h3>
+        <p>A structured record manager that stores student details, grades, and supports search and sort functions.</p>
+      </div>
+      
+    </div>
+  </section>
+
+  <section>
+    <h2>🐍 Python Projects</h2>
+    <div class="project-grid">
+      <div class="project-card" style="animation-delay: 1s">
+        <h3>Face Detection App</h3>
+        <p>Used OpenCV to detect and draw bounding boxes around human faces in live camera feed.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 1.2s">
+        <h3>Chatbot</h3>
+        <p>A rule-based chatbot built using Python and NLTK to simulate simple conversations.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>🌐 Web Development Projects</h2>
+    <div class="project-grid">
+      <div class="project-card" style="animation-delay: 1.4s">
+        <h3>Portfolio Website</h3>
+        <p>Responsive personal website built using HTML, CSS, and JavaScript to showcase resume and work.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 1.6s">
+        <h3>To-Do App</h3>
+        <p>Task manager with add/delete/filter functionality using JavaScript and localStorage.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 1.7s">
+        <h3>Test Series for GATE and JEE</h3>
+        <p>Made a responsive MCQs based test series for GATE and JEE using html , css , js and moongo-db</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>📊 Data Projects</h2>
+    <div class="project-grid">
+      <div class="project-card" style="animation-delay: 1.8s">
+        <h3>Stock Market Predictor</h3>
+        <p>Used machine learning to predict stock trends based on historical data using scikit-learn.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 1.9s">
+        <h3>COVID-19 Dashboard</h3>
+        <p>Real-time dashboard visualizing COVID-19 stats using Python, Flask, and Chart.js.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 2.1s">
+        <h3>Customer Segmentation</h3>
+        <p>Used K-Means clustering in Python to group customers based on behavior for targeted marketing.</p>
+      </div>
+      <div class="project-card" style="animation-delay: 2.3s">
+        <h3>Netflix Movie Analyzer</h3>
+        <p>Analyzed Netflix dataset to find trends in genre, ratings, and release years using pandas and matplotlib.</p>
+      </div>
+      
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 | AforAI </p>
+  </footer>
+
+  <script>
+    // Trigger card animations on load
+    window.addEventListener("load", () => {
+      const cards = document.querySelectorAll(".project-card");
+      cards.forEach((card, i) => {
+        card.style.animation = `fadeInCard 0.8s ease forwards`;
+        card.style.animationDelay = card.style.animationDelay || `${i * 0.2 + 0.5}s`;
+      });
+    });
+  </script>
+
+</body>
+</html>

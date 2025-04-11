@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Me</title>
+  <style>
+    body {
+      background-color: #0c0c0c; /* Royal black */
+      color: #f5c518; /* Royal yellow */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 60px 20px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    section#about {
+      animation: fadeInUp 2s ease-out forwards;
+      opacity: 0;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin: 1rem 0;
+      animation: fadeIn 2s ease-in forwards;
+    }
+
+    ul {
+      margin-left: 2rem;
+      margin-top: 1rem;
+      list-style: square;
+      animation: fadeInList 2s ease-in forwards;
+    }
+
+    li {
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    strong {
+      color: #fff700;
+    }
+
+    /* Animations */
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #f5c518, 0 0 10px #f5c518;
+      }
+      to {
+        text-shadow: 0 0 20px #ffd700, 0 0 30px #ffc400;
+      }
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInList {
+      0% {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+
+    /* Responsive text */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      p, li {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>About Me</h1>
+    <section id="about">
+      <p>I'm a passionate and driven 3rd-year Computer Science student at Gandhinagar University with a strong foundation in core computer science concepts and software development.</p>
+      <p>I've qualified <strong>GATE CS 2025 with an All India Rank of 433</strong> and <strong>GATE Data Analytics with an AIR of 295</strong>, showcasing my deep understanding of technical subjects and problem-solving skills.</p>
+      <p>💻 I'm proficient in <strong>C, C++, Python</strong>, and well-versed in <strong>Data Structures and Algorithms</strong>. My academic journey has equipped me with a solid grasp of core subjects like:</p>
+      <ul>
+        <li>Operating Systems</li>
+        <li>Digital Logic Design</li>
+        <li>Computer Organization & Architecture</li>
+        <li>Database Management Systems</li>
+        <li>Theory of Computation</li>
+        <li>Compiler Design</li>
+        <li>Computer Networks</li>
+      </ul>
+      <p>I'm always eager to learn, build, and contribute to impactful projects. Feel free to explore my portfolio and connect with me!</p>
+    </section>
+  </div>
+
+  <script>
+    // Smooth scroll animation on load
+    window.addEventListener("load", () => {
+      const about = document.getElementById("about");
+      setTimeout(() => {
+        about.style.opacity = "1";
+      }, 500);
+    });
+  </script>
+</body>
+</html>

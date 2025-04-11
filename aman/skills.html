@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aman's Skills</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+        
+        :root {
+            --royal-black: #0a0a0a;
+            --dark-black: #121212;
+            --royal-gold: #FFD700;
+            --light-gold: #FFECB3;
+            --animation-duration: 1.5s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--royal-black);
+            color: var(--royal-gold);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--royal-black) 70%);
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: fadeInDown var(--animation-duration) ease-out;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--light-gold);
+            animation: fadeInDown var(--animation-duration) ease-out 0.3s both;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            animation: fadeIn var(--animation-duration) ease-out 0.6s both;
+        }
+        
+        .gate-results {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp var(--animation-duration) ease-out 0.9s both;
+        }
+        
+        .gate-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+            border: 1px solid var(--royal-gold);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 200px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+        
+        .gate-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .gate-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .gate-card p {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .skills-section {
+            margin: 4rem 0;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, var(--royal-gold) 50%, transparent 100%);
+            animation: expandLine 1s ease-out 0.5s both;
+        }
+        
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .skill-category {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .skill-category.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.1);
+        }
+        
+        .skill-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--light-gold);
+            position: relative;
+        }
+        
+        .skill-category h3::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: var(--royal-gold);
+        }
+        
+        .skill-item {
+            margin-bottom: 1.2rem;
+        }
+        
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .skill-bar {
+            height: 8px;
+            background-color: rgba(255, 215, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--royal-gold), var(--light-gold));
+            border-radius: 4px;
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .floating-icons {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.2;
+            animation: float 10s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes expandLine {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .gate-results {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+            .typing-text {
+                font-size: 1.5rem;
+                color: var(--accent);
+                margin-bottom: 20px;
+                border-right: 2px solid var(--accent);
+                white-space: nowrap;
+                overflow: hidden;
+                width: 0;
+                animation: typing 2.8s steps(150, end) forwards, blink 0.5s step-end infinite;
+              }
+              @keyframes typing {
+                from { width: 0; }
+                to { width: 100%; }
+              }
+              @keyframes typing2 {
+                from { width: 0; }
+                to { width: 100%; }
+              }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <header>
+            <div class="typing-text" id="typing"><h1>Aman Yadav</h1></div>
+            <div class="typing-text" id="typing2"><h2>Computer Science Student | GATE Qualified</h2> </div>
+            <p class="tagline">
+                3rd year Computer Science student at Gandhinagar University with excellent knowledge of technical subjects 
+                and strong fundamentals in programming and aptitude.
+            </p>
+            
+            <div class="gate-results">
+                <div class="gate-card pulse">
+                    <h3>GATE CS 2025</h3>
+                    <p>AIR 433</p>
+                </div>
+                <div class="gate-card pulse">
+                    <h3>GATE DA 2025</h3>
+                    <p>AIR 295</p>
+                </div>
+            </div>
+        </header>
+        
+        <section class="skills-section">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-container" id="skills-container">
+                <div class="skill-category" id="programming-skills">
+                    <h3>Programming Languages</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>C/C++</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Python</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Data Structures & Algorithms</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-category" id="technical-subjects">
+                    <h3>Technical Subjects</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Operating Systems</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Computer Organization</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Database Management</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Theory of Computation</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Compiler Design</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Computer Networks</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Digital Logic</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-category" id="aptitude-skills">
+                    <h3>Aptitude</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Quantitative Aptitude</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Logical Reasoning</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Verbal Ability</span>
+                            <span class="skill-percent">0%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percent="0"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 | AforAI</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create floating icons
+            const particles = document.getElementById('particles');
+            const icons = ['{', '}', '<', '>', ';', '(', ')', '[', ']', '/', '*', '#', '%'];
+            
+            for (let i = 0; i < 30; i++) {
+                const icon = document.createElement('div');
+                icon.className = 'floating-icons';
+                icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+                icon.style.left = `${Math.random() * 100}%`;
+                icon.style.top = `${Math.random() * 100}%`;
+                icon.style.animationDelay = `${Math.random() * 10}s`;
+                icon.style.fontSize = `${Math.random() * 1 + 1}rem`;
+                particles.appendChild(icon);
+            }
+            
+            // Animate skill categories
+            const skillCategories = document.querySelectorAll('.skill-category');
+            skillCategories.forEach((category, index) => {
+                setTimeout(() => {
+                    category.classList.add('animate');
+                }, index * 200);
+            });
+            
+            // Set random percentages for programming skills (85-95%)
+            const programmingSkills = document.querySelectorAll('#programming-skills .skill-progress');
+            programmingSkills.forEach(skill => {
+                const randomPercent = Math.floor(Math.random() * 11) + 85; // 85-95
+                skill.setAttribute('data-percent', randomPercent);
+            });
+            
+            // Set random percentages for technical subjects (87-97%)
+            const technicalSkills = document.querySelectorAll('#technical-subjects .skill-progress');
+            technicalSkills.forEach(skill => {
+                const randomPercent = Math.floor(Math.random() * 11) + 87; // 87-97
+                skill.setAttribute('data-percent', randomPercent);
+            });
+            
+            // Set aptitude to 90%
+            const aptitudeSkills = document.querySelectorAll('#aptitude-skills .skill-progress');
+            aptitudeSkills.forEach(skill => {
+                skill.setAttribute('data-percent', 90);
+            });
+            
+            // Animate all skill bars
+            const skillBars = document.querySelectorAll('.skill-progress');
+            skillBars.forEach(bar => {
+                const percent = bar.getAttribute('data-percent');
+                setTimeout(() => {
+                    bar.style.width = `${percent}%`;
+                    
+                    // Update the percentage text
+                    const percentElement = bar.parentElement.previousElementSibling.querySelector('.skill-percent');
+                    let currentPercent = 0;
+                    const interval = setInterval(() => {
+                        if (currentPercent >= percent) {
+                            clearInterval(interval);
+                        } else {
+                            currentPercent++;
+                            percentElement.textContent = `${currentPercent}%`;
+                        }
+                    }, 1500 / percent);
+                }, 500);
+            });
+            
+            // Add pulse animation to gate cards on hover
+            const gateCards = document.querySelectorAll('.gate-card');
+            gateCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.classList.add('pulse');
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.classList.remove('pulse');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
