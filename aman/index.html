@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <title>Aman Yadav's Portfolio</title>
+  <title>Aman Yadav Portfolio</title>
 
   <style>
     :root {
@@ -239,6 +239,10 @@
       .typing-text, .skills-text {
         font-size: 1.5rem;
       }
+
+      .gallery-container {
+        height: 400px;
+      }
     }
 
     @media (max-width: 768px) {
@@ -272,14 +276,14 @@
       
       .typing-text, .skills-text {
         font-size: 1.8rem;
-text-wrap: wrap;
-      }
-      .skills-text {
-        font-size: 1.8rem;
       }
       
       #about {
         padding: 0 10px;
+      }
+
+      .gallery-container {
+        height: 350px;
       }
     }
 
@@ -290,7 +294,7 @@ text-wrap: wrap;
       
       .typing-text, .skills-text {
         font-size: 1.1rem;
-text-wrap: wrap;
+        text-wrap: wrap;
       }
       
       .socials {
@@ -300,6 +304,144 @@ text-wrap: wrap;
       .download-btn {
         width: 100%;
       }
+
+      .gallery-container {
+        height: 300px;
+      }
+      
+      .gallery-controls {
+        bottom: 10px;
+      }
+      
+      .prev-btn, .next-btn {
+        width: 35px;
+        height: 35px;
+      }
+    }
+
+    /* Image Gallery Styles */
+    .image-gallery {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .gallery-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .gallery-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.5s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-item.active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 1;
+    }
+
+    .gallery-item img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      position: relative;
+      border-radius: 10px;
+    }
+
+    .gallery-item::before,
+    .gallery-item::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border: 2px solid transparent;
+      border-radius: 12px;
+    }
+
+    .gallery-item.active::before {
+      border-left-color: #4d9fff;
+      border-right-color: var(--accent);
+      animation: borderX 2s linear infinite;
+    }
+
+    .gallery-item.active::after {
+      border-top-color: #4d9fff;
+      border-bottom-color: var(--accent);
+      animation: borderY 2s linear infinite;
+    }
+
+    @keyframes borderX {
+      0% {
+        transform: scaleX(0);
+        filter: drop-shadow(0 0 2px #4d9fff);
+      }
+      50% {
+        transform: scaleX(1);
+        filter: drop-shadow(0 0 4px var(--accent));
+      }
+      100% {
+        transform: scaleX(0);
+        filter: drop-shadow(0 0 2px #4d9fff);
+      }
+    }
+
+    @keyframes borderY {
+      0% {
+        transform: scaleY(0);
+        filter: drop-shadow(0 0 2px #4d9fff);
+      }
+      50% {
+        transform: scaleY(1);
+        filter: drop-shadow(0 0 4px var(--accent));
+      }
+      100% {
+        transform: scaleY(0);
+        filter: drop-shadow(0 0 2px #4d9fff);
+      }
+    }
+
+    .gallery-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 2;
+    }
+
+    .prev-btn, .next-btn {
+      background: var(--accent);
+      color: var(--bg-color);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .prev-btn:hover, .next-btn:hover {
+      background: var(--alt-accent);
+      transform: scale(1.1);
     }
   </style>
 </head>
@@ -338,6 +480,30 @@ text-wrap: wrap;
     </div>
   </div>
 
+  <div class="image-gallery">
+    <div class="gallery-container">
+      <div class="gallery-item active">
+        <img src="photos/IMG-20250411-WA0010.jpg" alt="Gallery Image 1">
+      </div>
+      <div class="gallery-item">
+        <img src="photos/IMG-20250411-WA0011.jpg" alt="Gallery Image 2">
+      </div>
+      <div class="gallery-item">
+        <img src="photos/IMG-20250411-WA0012.jpg" alt="Gallery Image 3">
+      </div>
+      <div class="gallery-item">
+        <img src="photos/IMG-20250411-WA0013.jpg" alt="Gallery Image 4">
+      </div>
+      <div class="gallery-item">
+        <img src="photos/IMG-20250411-WA0014.jpg" alt="Gallery Image 5">
+      </div>
+    </div>
+    <div class="gallery-controls">
+      <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+      <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+
   <script>
     function toggleTheme() {
       const body = document.body;
@@ -357,6 +523,34 @@ text-wrap: wrap;
       languageElement.textContent = languages[currentLangIndex];
       setTimeout(cycleLanguages, 1000);
     }
+
+    // Image Gallery functionality
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    let currentIndex = 0;
+
+    function showImage(index) {
+      galleryItems.forEach(item => item.classList.remove('active'));
+      galleryItems[index].classList.add('active');
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % galleryItems.length;
+      showImage(currentIndex);
+    }
+
+    function prevImage() {
+      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      showImage(currentIndex);
+    }
+
+    // Auto-advance images every 5 seconds
+    setInterval(nextImage, 5000);
+
+    // Add click handlers for navigation buttons
+    nextBtn.addEventListener('click', nextImage);
+    prevBtn.addEventListener('click', prevImage);
 
     // Initialize animations
     window.onload = () => {
