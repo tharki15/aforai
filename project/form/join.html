@@ -572,9 +572,12 @@
                     // Clear previous QR code
                     qrCanvas.innerHTML = '';
                     
+                    // Create UPI payment link with actual UPI ID
+                    const upiLink = `upi://pay?pa=ak5494678-1@okaxis&pn=Vishva%20Hindu%20Parishad&am=149&cu=INR&tn=Bajrang%20Dal%20Membership%20Fee&tr=${text}`;
+                    
                     // Create QR code with smaller size
                     const qr = new QRCode(qrCanvas, {
-                        text: text,
+                        text: upiLink,
                         width: 80,
                         height: 80,
                         colorDark: "#000000",
@@ -676,10 +679,10 @@
                     };
 
                     // Create QR code content with name and mobile
-                    const qrContent = `Name: ${sanitizedFormData.fullName}\nMobile: ${sanitizedFormData.mobile}`;
+                    const qrContent = `${sanitizedFormData.fullName}|${sanitizedFormData.mobile}`;
 
                     const [logoData, qrCodeData] = await Promise.all([
-                        loadImage('logo.png').catch(() => loadImage('form/logo.png')),
+                        loadImage('form/logo.png'),
                         generateQRCode(qrContent)
                     ]);
 
