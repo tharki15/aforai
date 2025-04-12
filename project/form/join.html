@@ -464,7 +464,7 @@
 
                     <div class="form-group">
                         <label>Scan the QR Code below to make the payment:</label><br>
-                        <img src="qrcode.jpg" alt="QR Code for Payment" width="200" height="200">
+                        <img src="qrcode.jpg" alt="QR Code for Payment" width="210" height="180">
                     </div>
                     
                     <div class="form-group">
@@ -592,6 +592,21 @@
                 });
             }
 
+            // Function to handle QR code click
+            function handleQRClick(upiLink) {
+                // Try to open UPI app
+                window.location.href = upiLink;
+                
+                // Fallback for iOS devices
+                setTimeout(() => {
+                    if (document.hidden || document.webkitHidden) {
+                        return;
+                    }
+                    // If the app didn't open, show a message
+                    alert('Please scan the QR code with your payment app to make the payment.');
+                }, 1000);
+            }
+
             // Function to load image as base64
             function loadImage(url) {
                 return new Promise((resolve) => {
@@ -680,6 +695,7 @@
 
                     // Create QR code content with name and mobile
                     const qrContent = `${sanitizedFormData.fullName}|${sanitizedFormData.mobile}`;
+                    const upiLink = `upi://pay?pa=ak5494678-1@okaxis&pn=Vishva%20Hindu%20Parishad&am=149&cu=INR&tn=Bajrang%20Dal%20Membership%20Fee&tr=${qrContent}`;
 
                     const [logoData, qrCodeData] = await Promise.all([
                         loadImage('form/logo.png'),
@@ -691,6 +707,9 @@
                     
                     // Add QR code (top right) - smaller size and higher position
                     doc.addImage(qrCodeData, 'PNG', 165, 5, 25, 25);
+
+                    // Add clickable link annotation for QR code
+                    doc.link(165, 5, 25, 25, { url: upiLink });
 
                     // Add header with styling - adjusted position
                     doc.setFontSize(24);
@@ -959,6 +978,16 @@
                     document.getElementById('genderError').style.display = 'none';
                 });
             });
+
+            // Add click handler for QR code in the form
+            const qrCodeImg = document.querySelector('.form-group img[alt="QR Code for Payment"]');
+            if (qrCodeImg) {
+                qrCodeImg.style.cursor = 'pointer';
+                qrCodeImg.addEventListener('click', function() {
+                    const upiLink = `upi://pay?pa=ak5494678-1@okaxis&pn=Vishva%20Hindu%20Parishad&am=149&cu=INR&tn=Bajrang%20Dal%20Membership%20Fee`;
+                    handleQRClick(upiLink);
+                });
+            }
         });
     </script>
 
