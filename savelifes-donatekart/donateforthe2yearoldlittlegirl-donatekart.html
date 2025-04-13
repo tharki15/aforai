@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Campaign</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">DonateKart</div>
+            <ul class="nav-links">
+                <li><a href="#">Life</a></li>
+                <li><a href="#">CSR</a></li>
+                <li><a href="#">Explore Campaigns</a></li>
+                <li><a href="#">Start A Campaign</a></li>
+                <li><a href="#">Donate Monthly</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="campaign-header">
+            <div class="campaign-title">
+                <h1>2 Year Old With A Failing Liver Can't Eat Or Drink, Only An Urgent Transplant Can Save Her</h1>
+                <div class="verification-badge">
+                    <i class="fas fa-check-circle"></i> Donatekart Verified
+                </div>
+            </div>
+            
+            <div class="scrolling-images">
+                <div class="image-scroll-container">
+                    <div class="image-scroll">
+                        <!-- Images will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="campaign-stats">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                    <div class="stats-details">
+                        <span class="amount-raised">₹14,80,956 raised out of ₹20,00,000</span>
+                        <span class="percentage">74.07%</span>
+                    </div>
+                </div>
+                <div class="time-left">12 days left</div>
+            </div>
+        </section>
+
+        <div class="content-wrapper">
+            <section class="main-content">
+                <div class="story-section">
+                    <h2>The Story</h2>
+                    <p>"I have never seen a child who loves food as much as my baby Khizra does. It's her favourite thing to do. But now, she is in the hospital, fighting for life. Her stomach is bloated, and she can barely drink water without crying in pain. They say her liver is failing…and without a liver transplant she won't make it…" - Sohini, mother, breaks down</p>
+                </div>
+            </section>
+
+            <section class="donation-section">
+                <div class="donation-options">
+                    <h3>DONATE VIA:</h3>
+                    <div class="payment-methods">
+                        <button class="payment-btn active">UPI</button>
+                        <button class="payment-btn">Cards</button>
+                        <button class="payment-btn">Net Banking</button>
+                    </div>
+
+                    <form id="donationForm" class="donation-form">
+                        <div class="donor-info">
+                            <input type="text" id="donorName" placeholder="Enter your name" required>
+                        </div>
+                        <div class="amount-input">
+                            <span class="currency">₹</span>
+                            <input type="number" id="amount" placeholder="Enter amount" min="1" required>
+                        </div>
+                        <button type="submit" class="donate-button" disabled>Donate Now</button>
+                    </form>
+                </div>
+
+               
+
+                <div class="top-donors">
+                    <h3>Top 10 Donors</h3>
+                    <div class="donors-list">
+                        <!-- Donors will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Us</h4>
+                <p>We are India's most trusted and transparent medical crowdfunding platform.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: info@donatekart.com</p>
+                <p>Phone: +91 8045685000</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Donatekart | All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
