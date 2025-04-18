@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>C-Coin Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="greeting" id="greeting"></div>
+            <div class="title">C-Coin</div>
+            <button class="wallet-btn" id="walletBtn">Wallet</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+            <div class="main-wallet-balance" id="mainWalletBalance">Wallet: ₹50</div>
+        </div>
+
+        <div class="time-options">
+            <button class="time-btn" data-time="15">15s</button>
+            <button class="time-btn" data-time="30">30s</button>
+            <button class="time-btn" data-time="60">60s</button>
+        </div>
+
+        <div class="direction-options">
+            <button class="direction-btn" data-direction="up">↑ UP</button>
+            <button class="direction-btn" data-direction="down">↓ DOWN</button>
+        </div>
+
+        <div class="multiplier-options">
+            <button class="multiplier-btn" data-multiplier="1.5">1.5X</button>
+            <button class="multiplier-btn" data-multiplier="1.75">1.75X</button>
+            <button class="multiplier-btn" data-multiplier="2">2X</button>
+        </div>
+
+        <div class="bet-amount-container">
+            <label for="bet-amount">Bet Amount (₹):</label>
+            <input type="number" id="bet-amount" min="10" value="50" step="10" inputmode="numeric" pattern="[0-9]*">
+        </div>
+
+        <div class="timer" id="timer"></div>
+        
+        <div class="bet-result" id="bet-result">
+            <h3>Bet Result</h3>
+            <div class="price-info">
+                <div class="price-item">
+                    <span class="price-label">Start Price</span>
+                    <span class="price-value" id="start-price">₹0.00</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-label">End Price</span>
+                    <span class="price-value" id="end-price">₹0.00</span>
+                </div>
+            </div>
+            <div class="price-change" id="price-change">0.00</div>
+        </div>
+    </div>
+
+    <!-- Wallet Modal -->
+    <div class="wallet-modal" id="walletModal">
+        <div class="wallet-content">
+            <button class="close-btn" id="closeWallet">&times;</button>
+            <div class="wallet-balance" id="walletBalance"></div>
+            
+            <div class="withdrawal-options">
+                <button class="withdrawal-btn" id="bankTransferBtn">Bank Transfer</button>
+                <button class="withdrawal-btn" id="upiBtn">UPI Transfer</button>
+            </div>
+
+            <div class="topup-options">
+                <button class="topup-btn" data-amount="50">Add ₹50 (Get ₹100)</button>
+                <button class="topup-btn" data-amount="100">Add ₹100 (Get ₹250)</button>
+                <button class="topup-btn" data-amount="200">Add ₹200 (Get ₹500)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Transfer Form -->
+    <div class="wallet-modal" id="bankTransferModal">
+        <div class="wallet-content">
+            <button class="close-btn" id="closeBankTransfer">&times;</button>
+            <h2>Bank Transfer Details</h2>
+            <form id="bankTransferForm">
+                <div class="form-group">
+                    <label for="accountNumber">Account Number</label>
+                    <input type="text" id="accountNumber" required inputmode="numeric" pattern="[0-9]*">
+                </div>
+                <div class="form-group">
+                    <label for="ifscCode">IFSC Code</label>
+                    <input type="text" id="ifscCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="accountName">Account Holder Name</label>
+                    <input type="text" id="accountName" required>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- UPI Transfer Form -->
+    <div class="wallet-modal" id="upiModal">
+        <div class="wallet-content">
+            <button class="close-btn" id="closeUpi">&times;</button>
+            <h2>UPI Transfer Details</h2>
+            <form id="upiForm">
+                <div class="form-group">
+                    <label for="upiId">UPI ID</label>
+                    <input type="text" id="upiId" required>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transaction ID Modal -->
+    <div class="wallet-modal" id="transactionIdModal">
+        <div class="wallet-content">
+            <h2>Enter Transaction ID</h2>
+            <form id="transactionForm">
+                <div class="form-group">
+                    <label for="transactionId">Transaction/Reference ID</label>
+                    <input type="text" id="transactionId" required>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Receipt Container (hidden) -->
+    <div id="receiptContainer" style="display: none;"></div>
+
+    <!-- Tour Overlay -->
+    <div class="tour-overlay" id="tourOverlay" style="display: none;">
+        <div class="tour-container">
+            <button class="tour-btn-skip" id="skipTour">Skip Tour</button>
+            
+            <div class="tour-step" data-step="1">
+                <div class="tour-title">Welcome to C-Coin Trading!</div>
+                <div class="tour-content">
+                    Welcome to the exciting world of C-Coin trading! This quick tour will show you how to use the platform and start making predictions.
+                </div>
+                <img src="https://via.placeholder.com/400x200/333333/4CAF50?text=Welcome+to+C-Coin" class="tour-image">
+            </div>
+            
+            <div class="tour-step" data-step="2">
+                <div class="tour-title">Understanding the Chart</div>
+                <div class="tour-content">
+                    The <span class="tour-highlight">price chart</span> shows the live movement of C-Coin. Watch how it moves up and down, and predict its direction to win!
+                </div>
+            </div>
+            
+            <div class="tour-step" data-step="3">
+                <div class="tour-title">Time Options</div>
+                <div class="tour-content">
+                    Select a <span class="tour-highlight">time duration</span> (15s, 30s, or 60s) for your prediction. This is how long your bet will last.
+                </div>
+            </div>
+            
+            <div class="tour-step" data-step="4">
+                <div class="tour-title">Prediction Direction</div>
+                <div class="tour-content">
+                    Choose whether you think the price will go <span class="tour-highlight">UP</span> or <span class="tour-highlight">DOWN</span> within your selected time period.
+                </div>
+            </div>
+            
+            <div class="tour-step" data-step="5">
+                <div class="tour-title">Multiplier Selection</div>
+                <div class="tour-content">
+                    Select a <span class="tour-highlight">multiplier</span> to determine your potential winnings. Higher multipliers mean higher rewards!
+                </div>
+            </div>
+            
+            <div class="tour-step" data-step="6">
+                <div class="tour-title">Bet Amount</div>
+                <div class="tour-content">
+                    Enter your <span class="tour-highlight">bet amount</span>. This is how much you want to wager on your prediction.
+                </div>
+            </div>
+            
+            <div class="tour-step" data-step="7">
+                <div class="tour-title">Reference Line</div>
+                <div class="tour-content">
+                    When you place a bet, a <span class="tour-highlight">red reference line</span> will appear. If you bet UP, you win if the price ends above this line. If you bet DOWN, you win if it ends below the line.
+                </div>
+            </div>
+            
+            <div class="tour-step" data-step="8">
+                <div class="tour-title">Wallet Management</div>
+                <div class="tour-content">
+                    Click the <span class="tour-highlight">Wallet</span> button to manage your funds, withdraw money, or add more credits to your account.
+                </div>
+            </div>
+            
+            <div class="tour-step" data-step="9">
+                <div class="tour-title">Ready to Trade!</div>
+                <div class="tour-content">
+                    You're all set to start trading! Remember, practice makes perfect. Good luck with your predictions!
+                </div>
+                <img src="https://via.placeholder.com/400x200/333333/4CAF50?text=Happy+Trading!" class="tour-image">
+            </div>
+            
+            <div class="tour-navigation">
+                <button class="tour-btn" id="prevStep" disabled>Previous</button>
+                <button class="tour-btn" id="nextStep">Next</button>
+            </div>
+            
+            <div class="tour-progress" id="tourProgress">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="tour-pointer" id="tourPointer" style="display: none;"></div>
+
+    <script src="game.js"></script>
+</body>
+</html> 
