@@ -618,8 +618,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const upiForm = document.getElementById('upiForm');
 
     upiBtn.addEventListener('click', () => {
-        if (currentUser.walletBalance < 300) {
-            alert('Minimum withdrawal amount is ₹300');
+        if (currentUser.walletBalance < 500) {
+            alert('Minimum withdrawal amount is ₹500');
             return;
         }
         walletModal.style.display = 'none';
@@ -981,7 +981,7 @@ function initializeLeaderboard() {
             { name: "CryptoKing", profit: 3290, displayProfit: "₹3,290.00", winRate: "65%", verified: true },
             { name: "HarshadBull", profit: 2456, displayProfit: "₹2,456.00", winRate: "71%", verified: true },
             { name: "WaveRider", profit: 1985, displayProfit: "₹1,985.00", winRate: "62%", verified: false },
-            { name: "Bull-Chandu", profit: 1740, displayProfit: "₹1,740.00", winRate: "59%", verified: true }
+            { name: "Prashant Yadav", profit: 1740, displayProfit: "₹1,190.00", winRate: "59%", verified: true }
         ];
         
         // Store initial leaderboard
