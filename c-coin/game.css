@@ -1,0 +1,240 @@
+/* Leaderboard styles */
+.leaderboard {
+    background-color: #7474a8;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    z-index: 100;
+}
+
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #b3b3ee;
+    padding-bottom: 10px;
+}
+
+.leaderboard h3 {
+    margin: 0;
+    color: #e1e1e1;
+    font-size: 16px;
+}
+
+.refresh-btn {
+    background-color: #2a2a3c;
+    border: none;
+    color: #e1e1e1;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refresh-btn:hover {
+    background-color: #3a3a4c;
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.leaderboard-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a2a3c;
+}
+
+.leaderboard-list li:last-child {
+    border-bottom: none;
+}
+
+.rank {
+    flex: 0 0 30px;
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+.name {
+    flex: 1;
+    color: #e1e1e1;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.profit {
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.win-rate {
+    color: #e1e1e1;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* Lucky Round Banner */
+.lucky-round {
+    background: linear-gradient(135deg, #f39c12, #e74c3c);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    animation: pulse 2s infinite;
+    display: none;
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
+}
+
+.lucky-round h3 {
+    margin: 0 0 5px 0;
+    color: white;
+    font-size: 18px;
+}
+
+.lucky-round p {
+    margin: 0;
+    color: white;
+    font-size: 14px;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(243, 156, 18, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+}
+
+/* Processing Overlay */
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.processing-content {
+    background-color: #1a1a2e;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 80%;
+}
+
+.loader {
+    border: 5px solid #2a2a3c;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.processing-content h3 {
+    margin: 0 0 10px 0;
+    color: #e1e1e1;
+}
+
+.processing-content p {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: 14px;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background-color: #1a1a2e;
+    border-left: 4px solid #3498db;
+    border-radius: 4px;
+    padding: 12px 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: none;
+    align-items: center;
+    min-width: 300px;
+    max-width: 500px;
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    z-index: 1000;
+}
+
+.notification-icon {
+    margin-right: 12px;
+    color: #3498db;
+}
+
+.notification-info {
+    border-left-color: #3498db;
+}
+
+.notification-success {
+    border-left-color: #4CAF50;
+}
+
+.notification-warning {
+    border-left-color: #f39c12;
+}
+
+.notification-error {
+    border-left-color: #e74c3c;
+}
+
+.notification-special {
+    border-left-color: #9b59b6;
+    background: linear-gradient(135deg, #1a1a2e, #2a2a4a);
+}
+
+@media (max-width: 768px) {
+    .leaderboard {
+        position: static;
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .notification {
+        width: 90%;
+        min-width: unset;
+    }
+} 
