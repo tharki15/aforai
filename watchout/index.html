@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <title>Royal Game Purchase</title>
+    <style>
+        /* Royal Black and Gold Theme with CSS Variables */
+        :root {
+            --royal-black: #0a0a0a;
+            --royal-gold: #ffd700;
+            --dark-gold: #b8860b;
+            --error-red: #ff5555;
+            --modal-bg: rgba(0, 0, 0, 0.9);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--royal-black);
+            color: var(--royal-gold);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 20px;
+        }
+        
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.15;
+            filter: blur(2px) brightness(0.5);
+        }
+        
+        /* Enhanced Decorative Animated Elements */
+        .decorative {
+            position: absolute;
+            background: var(--royal-gold);
+            opacity: 0.1;
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 15s infinite ease-in-out;
+            filter: blur(1px);
+        }
+        
+        .decorative:nth-child(1) {
+            width: min(300px, 80vw);
+            height: min(300px, 80vw);
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+        
+        .decorative:nth-child(2) {
+            width: min(200px, 60vw);
+            height: min(200px, 60vw);
+            bottom: -5%;
+            right: -5%;
+            animation-delay: 2s;
+        }
+        
+        .decorative:nth-child(3) {
+            width: min(150px, 40vw);
+            height: min(150px, 40vw);
+            top: 30%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+        
+        /* Enhanced Float Animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            }
+            25% {
+                transform: translate(10px, 10px) rotate(5deg);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            }
+            50% {
+                transform: translate(-10px, 15px) rotate(-5deg);
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            }
+            75% {
+                transform: translate(5px, -5px) rotate(3deg);
+                box-shadow: 0 0 35px rgba(255, 215, 0, 0.4);
+            }
+        }
+        
+        /* Main Container */
+        .container {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            animation: glow 2s infinite alternate;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.6);
+            }
+        }
+        
+        /* Enhanced Game Image Container with Pulsing Effect */
+        .game-image-container {
+            position: relative;
+            width: clamp(150px, 40vw, 250px);
+            height: clamp(150px, 40vw, 250px);
+            margin: 1.5rem 0;
+            perspective: 1000px;
+            animation: pulse 4s infinite ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            }
+            50% {
+                transform: scale(1.03);
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+            }
+        }
+        
+        .game-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            border: 3px solid var(--royal-gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            object-fit: cover;
+            transform-style: preserve-3d;
+        }
+        
+        .game-image:hover {
+            transform: scale(1.05) rotateY(5deg);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+        
+        .game-image:active {
+            transform: scale(0.98) rotateY(0deg);
+        }
+        
+        .instructions {
+            margin-top: 1rem;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            max-width: 90%;
+            color: rgba(255, 215, 0, 0.9);
+        }
+        
+        .price-tag {
+            background-color: var(--royal-gold);
+            color: var(--royal-black);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: var(--royal-black);
+            padding: clamp(20px, 5vw, 30px);
+            border-radius: 15px;
+            border: 2px solid var(--royal-gold);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            animation: modalFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal h2 {
+            margin-bottom: 1rem;
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            color: var(--royal-gold);
+        }
+        
+        .modal p {
+            margin-bottom: 1.5rem;
+            font-size: clamp(0.9rem, 3.5vw, 1rem);
+            color: rgba(255, 215, 0, 0.8);
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 1rem 0;
+            border: 1px solid var(--royal-gold);
+            background-color: #111;
+            color: var(--royal-gold);
+            font-size: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: var(--dark-gold);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .modal button {
+            background-color: var(--royal-gold);
+            color: var(--royal-black);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .modal button:hover {
+            background-color: var(--dark-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal button.secondary {
+            background-color: transparent;
+            color: var(--royal-gold);
+            border: 1px solid var(--royal-gold);
+        }
+        
+        .modal button.secondary:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        
+        .error-message {
+            color: var(--error-red);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            min-height: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .error-message.show {
+            opacity: 1;
+        }
+        
+        /* Loading Animation */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--royal-gold);
+            animation: spin 1s linear infinite;
+            margin: 1.5rem auto 0;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Payment Success Animation */
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            display: none;
+        }
+        
+        .check-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border: 4px solid var(--royal-gold);
+        }
+        
+        .check-icon::before {
+            top: 3px;
+            left: -2px;
+            width: 30px;
+            transform-origin: 100% 50%;
+            border-radius: 100px 0 0 100px;
+        }
+        
+        .check-icon::after {
+            top: 0;
+            left: 30px;
+            width: 60px;
+            transform-origin: 0 50%;
+            border-radius: 0 100px 100px 0;
+            animation: rotate-circle 4.25s ease-in;
+        }
+        
+        .check-icon::before, .check-icon::after {
+            content: '';
+            height: 100px;
+            position: absolute;
+            background: var(--royal-black);
+            transform: rotate(-45deg);
+        }
+        
+        .check-icon .icon-line {
+            height: 5px;
+            background-color: var(--royal-gold);
+            display: block;
+            border-radius: 2px;
+            position: absolute;
+            z-index: 10;
+        }
+        
+        .check-icon .icon-line.line-tip {
+            top: 46px;
+            left: 14px;
+            width: 25px;
+            transform: rotate(45deg);
+            animation: icon-line-tip 0.75s;
+        }
+        
+        .check-icon .icon-line.line-long {
+            top: 38px;
+            right: 8px;
+            width: 47px;
+            transform: rotate(-45deg);
+            animation: icon-line-long 0.75s;
+        }
+        
+        @keyframes icon-line-tip {
+            0% { width: 0; left: 1px; top: 19px; }
+            54% { width: 0; left: 1px; top: 19px; }
+            70% { width: 50px; left: -8px; top: 37px; }
+            84% { width: 17px; left: 21px; top: 48px; }
+            100% { width: 25px; left: 14px; top: 46px; }
+        }
+        
+        @keyframes icon-line-long {
+            0% { width: 0; right: 46px; top: 54px; }
+            65% { width: 0; right: 46px; top: 54px; }
+            84% { width: 55px; right: 0px; top: 35px; }
+            100% { width: 47px; right: 8px; top: 38px; }
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .game-image-container {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            .container {
+                padding-top: 30px;
+            }
+            
+            .game-image-container {
+                width: 140px;
+                height: 140px;
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <video autoplay muted loop id="bgVideo" class="video-background">
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    
+    <!-- Decorative elements -->
+    <div class="decorative"></div>
+    <div class="decorative"></div>
+    <div class="decorative"></div>
+    
+    <!-- Main content -->
+    <div class="container">
+        <h2>GAND HUNTER GAME </h2>
+        <h4>BY AMAN YADAV</h4>
+        <div class="game-image-container">
+            <img src="start.png" alt="Game Image" class="game-image" id="gameImage">
+        </div>
+        <div class="price-tag">₹20 Only</div>
+        <p class="instructions">
+            Click on the game image to purchase and download<br>
+            It will be great help if you purchase this.
+        </p>
+    </div>
+    
+    <!-- Payment ID Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <h2>Enter Payment Reference ID</h2>
+            <p>Please enter the transaction ID that you received after payment.</p>
+            <input type="text" id="transactionId" placeholder="Enter 12-digit transaction ID" maxlength="12" inputmode="numeric" pattern="[0-9]*">
+            <p class="error-message" id="errorMessage">Invalid reference ID, try again</p>
+            
+            <div class="modal-buttons">
+                <button id="submitPayment">Verify & Download</button>
+                <button class="secondary" id="cancelPayment">Cancel</button>
+            </div>
+            
+            <div class="loader" id="loader"></div>
+            
+            <div class="success-checkmark" id="successCheckmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const gameImage = document.getElementById('gameImage');
+            const paymentModal = document.getElementById('paymentModal');
+            const transactionIdInput = document.getElementById('transactionId');
+            const submitPaymentBtn = document.getElementById('submitPayment');
+            const cancelPaymentBtn = document.getElementById('cancelPayment');
+            const errorMessage = document.getElementById('errorMessage');
+            const loader = document.getElementById('loader');
+            const successCheckmark = document.getElementById('successCheckmark');
+            const bgVideo = document.getElementById('bgVideo');
+            
+            // State management
+            let paymentAttempted = false;
+            
+            // Initialize video and modal
+            initVideo();
+            initModal();
+            
+            // Handle game image click
+            gameImage.addEventListener('click', function() {
+                if (!paymentAttempted) {
+                    initiateUPIPayment();
+                } else {
+                    showPaymentModal();
+                }
+            });
+            
+            // Handle payment verification
+            submitPaymentBtn.addEventListener('click', verifyPayment);
+            
+            // Handle cancel button
+            cancelPaymentBtn.addEventListener('click', hidePaymentModal);
+            
+            // Handle Enter key in input field
+            transactionIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyPayment();
+                }
+            });
+            
+            // Handle input validation on the fly
+            transactionIdInput.addEventListener('input', function() {
+                const value = this.value;
+                if (value.length > 0 && (!/^\d+$/.test(value) || (value.length === 1 && value !== '5'))) {
+                    this.value = '';
+                } else if (value.length > 12) {
+                    this.value = value.slice(0, 12);
+                }
+            });
+            
+            // Check URL parameters for payment return
+            checkURLParams();
+            
+            function initVideo() {
+                // Try to play video with sound (may be blocked by browser autoplay policies)
+                bgVideo.muted = false;
+                const playPromise = bgVideo.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        // Auto-play was prevented, mute and try again
+                        bgVideo.muted = true;
+                        bgVideo.play();
+                    });
+                }
+            }
+            
+            function initModal() {
+                paymentModal.classList.remove('active');
+                loader.style.display = 'none';
+                successCheckmark.style.display = 'none';
+                submitPaymentBtn.style.display = 'block';
+                cancelPaymentBtn.style.display = 'block';
+                errorMessage.classList.remove('show');
+            }
+            
+            function checkURLParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('payment_return') || urlParams.has('txn_id')) {
+                    paymentAttempted = true;
+                    showPaymentModal();
+                    
+                    // Pre-fill transaction ID if provided in URL
+                    if (urlParams.has('txn_id')) {
+                        transactionIdInput.value = urlParams.get('txn_id');
+                    }
+                }
+            }
+            
+            function initiateUPIPayment() {
+                paymentAttempted = true;
+                
+                // UPI payment details
+                const upiId = 'ak5494678-1@okaxis';
+                const amount = '20';
+                const name = 'Royal Game Purchase';
+                const note = 'Game Download Payment';
+                const currency = 'INR';
+                
+                // Create UPI payment links for different apps
+                const paymentLinks = [
+                    `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&tn=${encodeURIComponent(note)}&cu=${currency}`,
+                    `tez://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&tn=${encodeURIComponent(note)}`,
+                    `paytmmp://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&tn=${encodeURIComponent(note)}`,
+                    `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&tn=${encodeURIComponent(note)}`,
+                    `googlepay://upi/pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&tn=${encodeURIComponent(note)}`
+                ];
+                
+                // Try to open UPI apps
+                let appOpened = false;
+                const openApp = (index = 0) => {
+                    if (index >= paymentLinks.length) {
+                        // No UPI app found, show manual payment modal
+                        if (!appOpened) {
+                            showPaymentModal();
+                        }
+                        return;
+                    }
+                    
+                    window.location.href = paymentLinks[index];
+                    
+                    // Check if app was opened
+                    setTimeout(() => {
+                        if (!document.hidden && !appOpened) {
+                            openApp(index + 1); // Try next app
+                        }
+                    }, 500);
+                };
+                
+                // Handle app visibility change
+                const handleVisibilityChange = () => {
+                    if (document.hidden) {
+                        appOpened = true;
+                        document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    }
+                };
+                
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+                
+                // Start trying to open apps
+                openApp();
+                
+                // Fallback in case visibility API doesn't work
+                setTimeout(() => {
+                    if (!appOpened) {
+                        showPaymentModal();
+                    }
+                }, 2000);
+            }
+            
+            function showPaymentModal() {
+                paymentModal.classList.add('active');
+                transactionIdInput.focus();
+                
+                // Reset modal state
+                loader.style.display = 'none';
+                successCheckmark.style.display = 'none';
+                submitPaymentBtn.style.display = 'block';
+                cancelPaymentBtn.style.display = 'block';
+                errorMessage.classList.remove('show');
+            }
+            
+            function hidePaymentModal() {
+                paymentModal.classList.remove('active');
+                transactionIdInput.value = '';
+                errorMessage.classList.remove('show');
+            }
+            
+            function verifyPayment() {
+                const transactionId = transactionIdInput.value.trim();
+                
+                // Validate transaction ID format
+                if (!/^5\d{11}$/.test(transactionId)) {
+                    errorMessage.classList.add('show');
+                    transactionIdInput.focus();
+                    return;
+                }
+                
+                // Hide error message if valid
+                errorMessage.classList.remove('show');
+                
+                // Show loading state
+                submitPaymentBtn.style.display = 'none';
+                cancelPaymentBtn.style.display = 'none';
+                loader.style.display = 'block';
+                
+                // Simulate verification (in a real app, you would call your backend)
+                setTimeout(() => {
+                    // Hide loader
+                    loader.style.display = 'none';
+                    
+                    // Show success animation
+                    successCheckmark.style.display = 'block';
+                    
+                    // Download after animation completes
+                    setTimeout(() => {
+                        downloadGame();
+                    }, 1500);
+                }, 2000);
+            }
+            
+            function downloadGame() {
+                // Create a temporary link to trigger download
+                const link = document.createElement('a');
+                link.href = 'game.apk';
+                link.download = 'royal_game.apk';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Close modal after download starts
+                setTimeout(() => {
+                    hidePaymentModal();
+                    
+                    // Show thank you message
+                    alert('Thank you for your purchase! The game is downloading now.\n\nIf the download doesn\'t start automatically, please check your downloads folder.');
+                }, 500);
+            }
+            
+            // Handle potential back button issues on mobile
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    checkURLParams();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
