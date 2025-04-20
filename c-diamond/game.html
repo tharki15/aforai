@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>C-Diamond Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="game-body">
+    <div class="game-container">
+        <div class="game-header">
+            <div class="greeting">
+                <span id="greeting-text">Good day</span>, <span id="user-name">Player</span>
+            </div>
+            <h1 class="game-title">C-Diamond</h1>
+            <div class="wallet-container">
+                <button id="wallet-btn">Wallet: ₹<span id="wallet-balance">100</span></button>
+                <div id="wallet-panel" class="wallet-panel hidden">
+                    <h3>Wallet Balance: ₹<span id="wallet-balance-panel">100</span></h3>
+                    
+                    <div class="withdraw-section">
+                        <h4>Withdrawal Options</h4>
+                        <button id="bank-transfer-btn" class="wallet-option-btn">Bank Transfer</button>
+                        <button id="upi-btn" class="wallet-option-btn">UPI Transfer</button>
+                        
+                        <!-- Bank Transfer Form -->
+                        <form id="bank-form" class="withdraw-form hidden">
+                            <div class="form-group">
+                                <label for="account-number">Bank Account Number</label>
+                                <input type="text" id="account-number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ifsc-code">IFSC Code</label>
+                                <input type="text" id="ifsc-code" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="account-name">Account Owner Name</label>
+                                <input type="text" id="account-name" required>
+                            </div>
+                            <button type="submit" class="btn-submit">Withdraw</button>
+                        </form>
+                        
+                        <!-- UPI Form -->
+                        <form id="upi-form" class="withdraw-form hidden">
+                            <div class="form-group">
+                                <label for="upi-id">UPI ID</label>
+                                <input type="text" id="upi-id" placeholder="example@upi" required>
+                            </div>
+                            <button type="submit" class="btn-submit">Withdraw</button>
+                        </form>
+                    </div>
+                    
+                    <div class="add-money-section">
+                        <h4>Add Money</h4>
+                        <div class="add-money-options">
+                            <button class="add-money-btn" data-amount="15" data-bonus="40">Add ₹15 (Get ₹40)</button>
+                            <button class="add-money-btn" data-amount="30" data-bonus="60">Add ₹30 (Get ₹60)</button>
+                            <button class="add-money-btn" data-amount="50" data-bonus="100">Add ₹50 (Get ₹100)</button>
+                            <button class="add-money-btn" data-amount="100" data-bonus="250">Add ₹100 (Get ₹250)</button>
+                            <button class="add-money-btn" data-amount="200" data-bonus="500">Add ₹200 (Get ₹500)</button>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-section">
+                        <h4>Referral Program</h4>
+                        <div class="referral-code">
+                            <p>Your Referral Code: <span id="user-referral-code">USERCODE123</span></p>
+                        </div>
+                        <p>Share your referral code:</p>
+                        <div class="share-options">
+                            <button class="share-btn whatsapp">WhatsApp</button>
+                            <button class="share-btn instagram">Instagram</button>
+                            <button class="share-btn copy">Copy</button>
+                        </div>
+                        <div class="referral-input">
+                            <p>Have a referral code?</p>
+                            <div class="referral-form">
+                                <input type="text" id="referral-code-input" placeholder="Enter referral code">
+                                <button id="submit-referral">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="level-indicator">
+            <h2>Level <span id="current-level">1</span></h2>
+            <div class="progress-container">
+                <div id="level-progress" class="progress-bar"></div>
+            </div>
+        </div>
+        
+        <div class="game-board">
+            <!-- Game matrix will be generated here by JavaScript -->
+        </div>
+        
+        <div class="game-stats">
+            <div class="stat">
+                <span>Diamonds Found: </span>
+                <span id="diamonds-found">0</span>
+            </div>
+            <div class="stat">
+                <span>Bombs Hit: </span>
+                <span id="bombs-hit">0</span>
+            </div>
+            <div class="stat">
+                <span>Net Gain/Loss: ₹</span>
+                <span id="total-gain-loss">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Level Up Modal -->
+    <div id="level-up-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Level Up!</h2>
+            <p>Congratulations! You have advanced to Level <span id="new-level">2</span></p>
+            <button id="continue-btn">Continue</button>
+        </div>
+    </div>
+    
+    <!-- Game Complete Modal -->
+    <div id="game-complete-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Congratulations!</h2>
+            <p>You are the #1 player! You have crossed all levels.</p>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+    
+    <!-- Receipt Modal -->
+    <div id="receipt-modal" class="modal hidden">
+        <div class="modal-content receipt">
+            <div class="receipt-header">
+                <div class="qr-code" id="receipt-qr"></div>
+                <div class="receipt-date" id="receipt-date"></div>
+            </div>
+            <h2>Withdrawal Receipt</h2>
+            <div class="receipt-details">
+                <p><strong>Amount:</strong> ₹<span id="receipt-amount"></span></p>
+                <p><strong>Transaction ID:</strong> <span id="receipt-transaction-id"></span></p>
+                <p><strong>Payment Method:</strong> <span id="receipt-method"></span></p>
+                <p><strong>Status:</strong> Processing</p>
+                <p class="receipt-message">Your money will be credited to your account within 24 hours.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Winners Section -->
+    <div id="winners-panel" class="winners-panel hidden">
+        <h2>Top Winners of the Week</h2>
+        <div class="winners-list">
+            <!-- Winners will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Add a button to open winners panel -->
+    <button id="winners-btn" class="floating-btn">
+        <span class="material-icons">emoji_events</span>
+        <span>Top Winners</span>
+    </button>
+    
+    <script src="game.js"></script>
+</body>
+</html> 

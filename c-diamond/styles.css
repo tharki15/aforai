@@ -1,0 +1,694 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Login & Signup Page Styles */
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.login-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2.5em;
+}
+
+.form-toggle {
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.form-toggle button {
+    flex: 1;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-toggle button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.form {
+    transition: all 0.3s;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #45a049;
+}
+
+/* Game Page Styles */
+.game-body {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.greeting {
+    font-size: 1.2em;
+}
+
+.game-title {
+    font-size: 2.5em;
+    text-align: center;
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: title-animation 7.5s linear infinite;
+}
+
+@keyframes title-animation {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.wallet-container {
+    position: relative;
+}
+
+#wallet-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.wallet-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 320px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background-color: #111;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.wallet-panel h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.wallet-panel h4 {
+    color: #4CAF50;
+    margin: 15px 0 10px;
+}
+
+/* Withdrawal Section */
+.withdraw-section {
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.wallet-option-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.wallet-option-btn:hover {
+    background-color: #333;
+}
+
+.withdraw-form {
+    margin-top: 15px;
+}
+
+/* Add Money Section */
+.add-money-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+.add-money-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.add-money-btn {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.add-money-btn:hover {
+    background-color: #45a049;
+}
+
+/* Referral Section */
+.referral-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+.referral-code {
+    background-color: #222;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+#user-referral-code {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.share-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.share-btn {
+    width: 70px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.8em;
+}
+
+.whatsapp {
+    background-color: #25D366;
+}
+
+.instagram {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.copy {
+    background-color: #666;
+}
+
+.referral-input {
+    margin-top: 15px;
+}
+
+.referral-form {
+    display: flex;
+    margin-top: 8px;
+}
+
+#referral-code-input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    background-color: #333;
+    color: white;
+}
+
+#submit-referral {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+/* Level Indicator */
+.level-indicator {
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.progress-container {
+    width: 100%;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 0%;
+    transition: width 0.5s;
+}
+
+/* Game Board */
+.game-board {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: auto;
+    max-width: 80%;
+}
+
+.cell {
+    aspect-ratio: 1/1;
+    background-color: #1C2630;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    width: 60px;
+    height: 60px;
+}
+
+.cell:hover {
+    transform: scale(1.05);
+    background-color: #243240;
+}
+
+.cell.revealed {
+    pointer-events: none;
+}
+
+.cell img {
+    max-width: 80%;
+    max-height: 80%;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.cell.revealed img {
+    opacity: 1;
+}
+
+/* Game Stats */
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    background-color: #222;
+    padding: 15px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #222;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+/* Receipt Styles */
+.receipt {
+    background-color: white;
+    color: black;
+    width: 90%;
+    max-width: 400px;
+}
+
+.receipt-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.qr-code {
+    width: 80px;
+    height: 80px;
+    background-color: #f0f0f0;
+}
+
+.receipt-date {
+    text-align: right;
+    font-size: 0.9em;
+}
+
+.receipt-details {
+    text-align: left;
+    line-height: 1.6;
+}
+
+.receipt-message {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .game-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .wallet-panel {
+        width: 100%;
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 10px 10px 0 0;
+        max-height: 75vh;
+    }
+    
+    .game-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cell {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .cell {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .game-title {
+        font-size: 2em;
+    }
+    
+    .greeting {
+        font-size: 1em;
+    }
+    
+    .add-money-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 360px) {
+    .cell {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* Animation Classes for Level Change */
+@keyframes diamond-animation {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.7; }
+}
+
+@keyframes level-up {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.level-up-animation {
+    animation: level-up 1s ease-out;
+}
+
+/* Grid size adjustments for different levels */
+.grid-3x3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-5x5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.grid-7x7 {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+/* Winners Panel */
+.winners-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    background-color: rgba(0, 0, 0, 0.95);
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 1500;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    animation: glow 2s infinite alternate;
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.winners-panel h2 {
+    text-align: center;
+    color: gold;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    animation: titlePulse 1.5s ease-in-out infinite;
+}
+
+.winner-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: transform 0.3s, background-color 0.3s;
+    animation: slideIn 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.winner-item:hover {
+    transform: scale(1.03);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.winner-rank {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.rank-1 {
+    background: linear-gradient(45deg, #FFD700, #FFC107);
+    color: #000;
+    box-shadow: 0 0 10px #FFD700;
+}
+
+.rank-2 {
+    background: linear-gradient(45deg, #C0C0C0, #E0E0E0);
+    color: #000;
+}
+
+.rank-3 {
+    background: linear-gradient(45deg, #CD7F32, #D4A76A);
+    color: #000;
+}
+
+.winner-details {
+    flex: 1;
+}
+
+.winner-name {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.verified-icon {
+    color: #2196F3;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.winner-location {
+    font-size: 0.8em;
+    color: #AAA;
+}
+
+.winner-amount {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.floating-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    cursor: pointer;
+    animation: bounce 1s infinite alternate;
+}
+
+/* Animations */
+@keyframes glow {
+    0% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
+    100% { box-shadow: 0 0 25px rgba(0, 255, 0, 0.6); }
+}
+
+@keyframes titlePulse {
+    0% { transform: scale(1); text-shadow: 0 0 10px rgba(255, 215, 0, 0.6); }
+    50% { transform: scale(1.05); text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+    100% { transform: scale(1); text-shadow: 0 0 10px rgba(255, 215, 0, 0.6); }
+}
+
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+} 
