@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prashant Yadav - Proud Hindu & Agriculture Visionary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/ShaderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/shaders/CopyShader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/shaders/FXAAShader.js"></script>
+  <style>
+    :root {
+      --royal-black: #0a0a0a;
+      --royal-gold: #D4AF37;
+      --dark-orange: #FF8C00;
+      --rich-bronze: #CD7F32;
+      --deep-maroon: #800020;
+      --cream: #F5F5DC;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Playfair Display', serif;
+      background: var(--royal-black);
+      color: var(--cream);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* Texture overlay for royal feel */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230a0a0a"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%23D4AF37" stroke-width="0.5" opacity="0.1"/></svg>');
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    nav {
+      position: fixed;
+      width: 100%;
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 20px 50px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      transition: all 0.5s ease;
+      border-bottom: 1px solid var(--royal-gold);
+    }
+
+    nav.scrolled {
+      padding: 15px 30px;
+      background: rgba(10, 10, 10, 0.95);
+    }
+
+    nav a {
+      color: var(--cream);
+      font-weight: 500;
+      margin: 0 20px;
+      text-decoration: none;
+      transition: all 0.3s;
+      position: relative;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
+    nav a:hover {
+      color: var(--royal-gold);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background: linear-gradient(90deg, var(--royal-gold), var(--dark-orange));
+      transition: width 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    header {
+      height: 100vh;
+      background: linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.9)), url('images/banner1.jpeg') no-repeat center center/cover;
+      color: var(--royal-gold);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.9) 100%);
+    }
+
+    header h1 {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      transform: translateY(50px);
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.3s forwards;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+      letter-spacing: 3px;
+    }
+
+    header p {
+      margin-top: 10px;
+      font-size: 2rem;
+      transform: translateY(50px);
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.6s forwards;
+      position: relative;
+      z-index: 1;
+      color: var(--cream);
+      max-width: 800px;
+      padding: 0 20px;
+    }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--royal-gold);
+      font-size: 2rem;
+      animation: bounce 2s infinite;
+      z-index: 1;
+      cursor: pointer;
+      border: 2px solid var(--royal-gold);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s;
+    }
+
+    .scroll-down:hover {
+      background: rgba(212, 175, 55, 0.2);
+      transform: translateX(-50%) scale(1.1);
+    }
+
+    section {
+      padding: 120px 50px;
+      min-height: 100vh;
+      position: relative;
+      background: linear-gradient(rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.95));
+    }
+
+    section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23D4AF37" stroke-width="0.5" opacity="0.05"/></svg>');
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .about, .achievements, .campaign, .gallery {
+      opacity: 0;
+      transform: translateY(100px);
+      transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .visible {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    h2 {
+      font-size: 3.5rem;
+      color: var(--royal-gold);
+      margin-bottom: 40px;
+      text-align: center;
+      position: relative;
+      display: inline-block;
+      letter-spacing: 2px;
+    }
+
+    h2::after {
+      content: '';
+      display: block;
+      margin: 15px auto;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--royal-gold), var(--dark-orange));
+      border-radius: 3px;
+      transition: all 0.5s;
+    }
+
+    .about p, .campaign p {
+      font-size: 1.3rem;
+      line-height: 2;
+      max-width: 900px;
+      margin: 30px auto;
+      text-align: center;
+      color: var(--cream);
+    }
+
+    .achievements ul {
+      max-width: 800px;
+      margin: 0 auto;
+      list-style: none;
+      padding: 0;
+    }
+
+    .achievements ul li {
+      font-size: 1.2rem;
+      margin: 20px 0;
+      padding: 20px 25px 20px 70px;
+      position: relative;
+      background: rgba(20, 20, 20, 0.7);
+      border-radius: 5px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+      border-left: 3px solid var(--royal-gold);
+    }
+
+    .achievements ul li:hover {
+      transform: translateX(10px);
+      background: rgba(30, 30, 30, 0.8);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    }
+
+    .achievements ul li::before {
+      content: '★';
+      position: absolute;
+      left: 25px;
+      color: var(--royal-gold);
+      font-size: 1.5rem;
+    }
+
+    .gallery {
+      text-align: center;
+    }
+
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .gallery-item {
+      height: 350px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      transition: all 0.4s;
+      position: relative;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(10, 10, 10, 0.8), transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border-color: var(--royal-gold);
+    }
+
+    .gallery-item:hover::after {
+      opacity: 1;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    .logo-banner {
+      background: rgba(20, 20, 20, 0.8);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin: 50px auto;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .logo-banner img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1) sepia(1) hue-rotate(10deg) saturate(5);
+      opacity: 0.8;
+      transition: all 0.3s;
+    }
+
+    .logo-banner img:hover {
+      opacity: 1;
+      filter: brightness(1) invert(0) sepia(1) hue-rotate(10deg) saturate(5);
+      transform: scale(1.1);
+    }
+
+    #model-container {
+      position: fixed;
+      top: 50%;
+      right: 50px;
+      transform: translateY(-50%);
+      width: 350px;
+      height: 350px;
+      z-index: 100;
+      pointer-events: none;
+      transition: all 0.5s ease;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid var(--royal-gold);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+      background: rgba(10, 10, 10, 0.7);
+    }
+
+    #mobile-model-container {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 300px;
+      margin: 50px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid var(--royal-gold);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+      background: rgba(10, 10, 10, 0.7);
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    footer {
+      background: linear-gradient(to right, var(--royal-black), var(--deep-maroon));
+      color: var(--cream);
+      text-align: center;
+      padding: 50px 0 30px;
+      font-size: 1.1rem;
+      position: relative;
+      border-top: 1px solid var(--royal-gold);
+    }
+
+    .footer-wave {
+      position: absolute;
+      top: -50px;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23800020" opacity=".5"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" fill="%23800020" opacity=".7"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23800020"/></svg>');
+      background-size: cover;
+    }
+
+    footer p {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+      40% { transform: translateY(-20px) translateX(-50%); }
+      60% { transform: translateY(-10px) translateX(-50%); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes goldPulse {
+      0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+      50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.8); }
+      100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+    }
+
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+      #model-container {
+        right: 30px;
+        width: 300px;
+        height: 300px;
+      }
+      
+      header h1 {
+        font-size: 4rem;
+      }
+      
+      header p {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 992px) {
+      header h1 {
+        font-size: 3.5rem;
+      }
+      
+      header p {
+        font-size: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 3rem;
+      }
+      
+      #model-container {
+        width: 250px;
+        height: 250px;
+      }
+      
+      .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+      
+      .gallery-item {
+        height: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 15px 20px;
+        flex-direction: column;
+      }
+      
+      nav.scrolled {
+        padding: 10px 15px;
+      }
+      
+      nav div {
+        margin-bottom: 10px;
+      }
+      
+      header h1 {
+        font-size: 2.8rem;
+      }
+      
+      header p {
+        font-size: 1.3rem;
+      }
+      
+      section {
+        padding: 100px 30px;
+      }
+      
+      h2 {
+        font-size: 2.5rem;
+      }
+      
+      .about p, .campaign p, .achievements ul li {
+        font-size: 1.1rem;
+      }
+      
+      #model-container {
+        display: none;
+      }
+      
+      #mobile-model-container {
+        display: block;
+      }
+      
+      .logo-banner {
+        padding: 20px;
+        gap: 20px;
+      }
+      
+      .logo-banner img {
+        height: 50px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+      
+      header p {
+        font-size: 1.1rem;
+      }
+      
+      section {
+        padding: 80px 20px;
+      }
+      
+      h2 {
+        font-size: 2rem;
+      }
+      
+      .gallery-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .gallery-item {
+        height: 250px;
+      }
+      
+      .logo-banner {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      #mobile-model-container {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <div><strong style="color: var(--royal-gold); font-size: 1.8rem; font-weight: 600;">PRASHANT YADAV</strong></div>
+  <div>
+    <a href="#about">About</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#campaign">Save Dharma</a>
+    <a href="#gallery">Gallery</a>
+  </div>
+</nav>
+
+<header>
+  <h1>PRASHANT YADAV</h1>
+  <p>B.Sc Agriculture Student | Dharm Rakshak 🌿🧡</p>
+  <div class="scroll-down" onclick="document.querySelector('#about').scrollIntoView({ behavior: 'smooth' })">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</header>
+
+<section class="about" id="about">
+  <h2>About Me</h2>
+  <div class="logo-banner">
+    <img src="images/logo1.webp" alt="Partner Logo 1">
+    <img src="images/logo3.png" alt="Partner Logo 2">
+    <img src="images/logo4.png" alt="Partner Logo 3">
+  </div>
+  <p>I am Prashant Yadav, a dedicated B.Sc Agriculture student from India, blending modern agricultural practices with our ancient traditional wisdom. As a passionate son of Bharat Mata and a staunch Kattar Hindu, my mission is to empower farmers, preserve Sanatan Dharma, and uphold our glorious heritage in every action. Through my journey, I strive to bring innovation in farming while staying rooted to our sacred values. 🌾🧡</p>
+  
+  <div id="mobile-model-container"></div>
+</section>
+
+<section class="achievements" id="achievements">
+  <h2>My Achievements</h2>
+  <div class="logo-banner">
+    <img src="images/logo4.png" alt="Partner Logo 4">
+    <img src="images/logo.png" alt="Partner Logo 5">
+  </div>
+  <ul>
+    <li>Awarded "Best Agriculture Innovator" by XYZ University, 2024.</li>
+    <li>Organized Statewide Organic Farming Seminar with 500+ farmers attending.</li>
+    <li>Published 3 Research Papers on Sustainability and Smart Farming.</li>
+    <li>Campus Ambassador for ICAR - Promoting Young Agriculture Leaders.</li>
+    <li>Represented University at the National Krishi Mela 2024.</li>
+    <li>Founder of "GoGreen Farmers Club" - Empowering Rural Youth.</li>
+    <li>Interned at IARI, New Delhi under top Agri-Scientists.</li>
+    <li>Certified Expert in Agri-Business Management & Rural Innovation.</li>
+  </ul>
+</section>
+
+<section class="campaign" id="campaign">
+  <h2>Save Hindu Dharma Campaign</h2>
+  <div class="logo-banner">
+    <img src="images/logo1.webp" alt="Partner Logo 1">
+    <img src="images/logo3.png" alt="Partner Logo 3">
+    <img src="images/logo.png" alt="Partner Logo 5">
+  </div>
+  <p>Being a proud Kattar Hindu, I have dedicated a part of my life to the protection and promotion of Sanatan Dharma. Through my "Save Hindu Dharma" campaign, I actively organize awareness drives, workshops, and social media movements that educate youth about the rich scientific, cultural, and spiritual aspects of Hinduism. I emphasize protecting our temples, rituals, Sanskrit language, and Vedic knowledge from distortion and destruction.🕉️<br><br>Our campaign supports rebuilding Gurukuls, empowering priests (Purohits), stopping conversions, celebrating every Hindu festival grandly, and standing united against anti-Hindu propaganda. It is not just a mission; it is a duty towards my ancestors and Bharat Mata. 🚩🙏</p>
+</section>
+
+<section class="gallery" id="gallery">
+  <h2>Gallery</h2>
+  <div class="logo-banner">
+    <img src="images/logo2.png" alt="Partner Logo 2">
+    <img src="images/logo4.png" alt="Partner Logo 4">
+  </div>
+  <div class="gallery-container">
+    <div class="gallery-item">
+      <img src="images/img1.jpg" alt="Prashant 1">
+    </div>
+    <div class="gallery-item">
+      <img src="images/img2.jpg" alt="Prashant 2">
+    </div>
+    <div class="gallery-item">
+      <img src="images/img3.jpg" alt="Prashant 3">
+    </div>
+    <div class="gallery-item">
+      <img src="images/img4.jpg" alt="Prashant 4">
+    </div>
+  </div>
+</section>
+
+<div id="model-container"></div>
+
+<footer>
+  <div class="footer-wave"></div>
+  <p>© 2025 PRASHANT YADAV | PROUD HINDU | JAI SHREE RAM 🚩</p>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', function() {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  });
+
+  // Section reveal animation
+  const sections = document.querySelectorAll('.about, .achievements, .campaign, .gallery');
+
+  function checkScroll() {
+    sections.forEach(section => {
+      const sectionTop = section.getBoundingClientRect().top;
+      const windowHeight = window.innerHeight;
+      if (sectionTop < windowHeight * 0.75) {
+        section.classList.add('visible');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', checkScroll);
+  window.addEventListener('load', checkScroll);
+
+  // 3D Model with Scroll Sync - Enhanced for both desktop and mobile
+  let scene, camera, renderer, model, mixer, mobileScene, mobileCamera, mobileRenderer, mobileModel, mobileMixer;
+  const container = document.getElementById('model-container');
+  const mobileContainer = document.getElementById('mobile-model-container');
+  
+  function init3DModel() {
+    // Desktop model initialization
+    if (container && window.innerWidth >= 768) {
+      initDesktopModel();
+    }
+    
+    // Mobile model initialization
+    if (mobileContainer && window.innerWidth < 768) {
+      initMobileModel();
+    }
+  }
+  
+  function initDesktopModel() {
+    // Scene setup
+    scene = new THREE.Scene();
+    scene.background = null;
+    
+    // Camera setup
+    camera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
+    camera.position.set(0, 0, 5);
+    
+    // Renderer setup
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+    
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambientLight);
+    
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight1.position.set(1, 1, 1);
+    scene.add(directionalLight1);
+    
+    const directionalLight2 = new THREE.DirectionalLight(0xD4AF37, 0.5);
+    directionalLight2.position.set(-1, -1, -1);
+    scene.add(directionalLight2);
+    
+    // Load model
+    loadModel(scene, function(gltf) {
+      model = gltf.scene;
+      model.scale.set(1.8, 1.8, 1.8);
+      model.position.y = -1;
+      scene.add(model);
+      
+      // Animation mixer
+      if (gltf.animations && gltf.animations.length) {
+        mixer = new THREE.AnimationMixer(model);
+        const action = mixer.clipAction(gltf.animations[0]);
+        action.play();
+      }
+    });
+  }
+  
+  function initMobileModel() {
+    // Scene setup
+    mobileScene = new THREE.Scene();
+    mobileScene.background = null;
+    
+    // Camera setup
+    mobileCamera = new THREE.PerspectiveCamera(40, mobileContainer.offsetWidth / mobileContainer.offsetHeight, 0.1, 1000);
+    mobileCamera.position.set(0, 0, 5);
+    
+    // Renderer setup
+    mobileRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    mobileRenderer.setSize(mobileContainer.offsetWidth, mobileContainer.offsetHeight);
+    mobileRenderer.setPixelRatio(window.devicePixelRatio);
+    mobileContainer.appendChild(mobileRenderer.domElement);
+    
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    mobileScene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(1, 1, 1);
+    mobileScene.add(directionalLight);
+    
+    const pointLight = new THREE.PointLight(0xD4AF37, 1, 10);
+    pointLight.position.set(0, 2, 5);
+    mobileScene.add(pointLight);
+    
+    // Load model
+    loadModel(mobileScene, function(gltf) {
+      mobileModel = gltf.scene;
+      mobileModel.scale.set(1.5, 1.5, 1.5);
+      mobileModel.position.y = -1;
+      mobileScene.add(mobileModel);
+      
+      // Animation mixer
+      if (gltf.animations && gltf.animations.length) {
+        mobileMixer = new THREE.AnimationMixer(mobileModel);
+        const action = mobileMixer.clipAction(gltf.animations[0]);
+        action.play();
+      }
+      
+      // Auto-rotate for mobile
+      function animateMobileModel() {
+        requestAnimationFrame(animateMobileModel);
+        if (mobileModel) {
+          mobileModel.rotation.y += 0.005;
+        }
+        if (mobileMixer) {
+          mobileMixer.update(0.01);
+        }
+        mobileRenderer.render(mobileScene, mobileCamera);
+      }
+      animateMobileModel();
+    });
+  }
+  
+  function loadModel(targetScene, callback) {
+    const loader = new THREE.GLTFLoader();
+    loader.load(
+      'gus.glb',
+      function(gltf) {
+        callback(gltf);
+      },
+      undefined,
+      function(error) {
+        console.error('Error loading 3D model:', error);
+        if (container) container.style.display = 'none';
+        if (mobileContainer) mobileContainer.style.display = 'none';
+      }
+    );
+  }
+  
+  let previousScrollPosition = 0;
+  let targetY = 0;
+  let currentY = 0;
+  
+  function animate() {
+    requestAnimationFrame(animate);
+    
+    // Update desktop model position based on scroll
+    if (model) {
+      const scrollPosition = window.scrollY;
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const scrollPercentage = scrollPosition / maxScroll;
+      
+      // Calculate target position (from top to bottom of viewport)
+      targetY = -scrollPercentage * (window.innerHeight - container.offsetHeight);
+      
+      // Smooth movement
+      currentY += (targetY - currentY) * 0.1;
+      container.style.transform = `translateY(calc(${currentY}px - 50%))`;
+      
+      // Rotate model slightly based on scroll direction
+      const scrollDelta = scrollPosition - previousScrollPosition;
+      model.rotation.y += scrollDelta * 0.001;
+      previousScrollPosition = scrollPosition;
+      
+      // Update animations
+      if (mixer) {
+        mixer.update(0.01);
+      }
+      
+      renderer.render(scene, camera);
+    }
+  }
+  
+  // Handle window resize
+  function onWindowResize() {
+    if (camera && renderer && container) {
+      camera.aspect = container.offsetWidth / container.offsetHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
+    }
+    
+    if (mobileCamera && mobileRenderer && mobileContainer) {
+      mobileCamera.aspect = mobileContainer.offsetWidth / mobileContainer.offsetHeight;
+      mobileCamera.updateProjectionMatrix();
+      mobileRenderer.setSize(mobileContainer.offsetWidth, mobileContainer.offsetHeight);
+    }
+  }
+  
+  // Initialize everything when DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    init3DModel();
+    
+    // Add smooth scroll to all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+    
+    // Start desktop animation loop
+    if (window.innerWidth >= 768) {
+      animate();
+    }
+  });
+  
+  window.addEventListener('resize', function() {
+    onWindowResize();
+    
+    // Reinitialize models if crossing mobile/desktop threshold
+    if (window.innerWidth >= 768 && !scene) {
+      if (mobileContainer) {
+        mobileContainer.innerHTML = '';
+        mobileScene = null;
+        mobileModel = null;
+      }
+      initDesktopModel();
+      animate();
+    } else if (window.innerWidth < 768 && !mobileScene) {
+      if (container) {
+        container.innerHTML = '';
+        scene = null;
+        model = null;
+      }
+      initMobileModel();
+    }
+  });
+</script>
+
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
