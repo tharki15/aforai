@@ -572,7 +572,61 @@ function loadProgress() {
     `).join('');
 }
 
-// Initialize dashboard
+function loadTargets() {
+    const weeklyContainer = document.querySelector('.weekly-targets');
+    const monthlyContainer = document.querySelector('.monthly-targets');
+
+    const weeklyTargets = JSON.parse(localStorage.getItem('weeklyTargets')) || [];
+    const monthlyTargets = JSON.parse(localStorage.getItem('monthlyTargets')) || [];
+
+    function renderTargets(container, targets, type) {
+        container.innerHTML = targets.map((target, index) => `
+            <div class="target-item">
+                <input type="checkbox" ${target.completed ? 'checked' : ''} onchange="toggleTargetStatus('${type}', ${index})">
+                <span>${target.task}</span>
+                <button onclick="editTarget('${type}', ${index})">✏️</button>
+            </div>
+        `).join('') + `
+            <div class="add-target">
+                <button onclick="addTarget('${type}')">➕ Add ${type === 'weekly' ? 'Weekly' : 'Monthly'} Target</button>
+            </div>
+        `;
+    }
+
+    renderTargets(weeklyContainer, weeklyTargets, 'weekly');
+    renderTargets(monthlyContainer, monthlyTargets, 'monthly');
+}
+
+function addTarget(type) {
+    const task = prompt(`Enter new ${type} target:`);
+    if (!task) return;
+    const key = `${type}Targets`;
+    const targets = JSON.parse(localStorage.getItem(key)) || [];
+    targets.push({ task, completed: false });
+    localStorage.setItem(key, JSON.stringify(targets));
+    loadTargets();
+}
+
+function editTarget(type, index) {
+    const key = `${type}Targets`;
+    const targets = JSON.parse(localStorage.getItem(key)) || [];
+    const newTask = prompt('Edit target:', targets[index].task);
+    if (!newTask) return;
+    targets[index].task = newTask;
+    localStorage.setItem(key, JSON.stringify(targets));
+    loadTargets();
+}
+
+function toggleTargetStatus(type, index) {
+    const key = `${type}Targets`;
+    const targets = JSON.parse(localStorage.getItem(key)) || [];
+    targets[index].completed = !targets[index].completed;
+    localStorage.setItem(key, JSON.stringify(targets));
+    loadTargets();
+}
+
+// Add this at the bottom to initialize everything
 loadSubjects();
 loadStudyPlan();
 loadProgress();
+loadTargets();
