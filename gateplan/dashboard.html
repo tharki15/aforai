@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATE 2026 Study Planner - Dashboard</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5544768868852000"
+     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="user-info">
+                <span id="userName"></span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <!-- Countdown Section -->
+        <div class="countdown-section">
+            <h2>GATE 2026 Countdown</h2>
+            <div id="countdown" class="countdown"></div>
+        </div>
+        <marquee>AFTER 5 LOGIN'S YOU WILL BE ASKED FOR PAYMENT TO USE THIS WEBSITE, THIS WILL BE ONE TIME FEES </marquee>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="subjects">Subjects</button>
+            <button class="nav-tab" data-tab="studyPlan">Study Plan</button>
+            <button class="nav-tab" data-tab="progress">Progress</button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div id="subjects" class="tab-content active">
+            <div class="subjects-container"></div>
+        </div>
+
+        <div id="studyPlan" class="tab-content">
+            <div class="study-plan">
+                <div class="weekday-plan">
+                    <h3></h3>
+
+                    <div class="schedule-container"></div>
+                </div>
+                <div class="weekend-plan">
+                    <h3></h3>
+                    <div class="schedule-container"></div>
+                </div>
+            </div>
+            <h3>Weekly Targets</h3>
+<div class="weekly-targets"></div>
+
+<h3>Monthly Targets</h3>
+<div class="monthly-targets"></div>
+
+        </div>
+
+        <div id="progress" class="tab-content">
+            <div class="progress-section">
+                <div class="progress-chart"></div>
+                <div class="subject-progress-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Details Modal -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalSubjectName"></h2>
+            <div class="subject-details"></div>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html> 
