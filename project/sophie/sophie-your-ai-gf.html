@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Embedded Elysium Studio</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #container {
+      height: 100vh;
+      width: 100vw;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="container" src="https://studio--elysium-ai-pep4m.us-central1.hosted.app/" allow="camera; microphone; clipboard-read; clipboard-write"></iframe>
+
+  <script>
+    // Optional JS functionality for communication, future control, etc.
+    const iframe = document.getElementById('container');
+
+    // Example: postMessage to iframe (if you control the inside app)
+    function sendMessageToApp(message) {
+      iframe.contentWindow.postMessage(message, '*');
+    }
+
+    // Example: receive messages from iframe
+    window.addEventListener('message', (event) => {
+      console.log('Message from app:', event.data);
+    });
+  </script>
+</body>
+</html>
 
